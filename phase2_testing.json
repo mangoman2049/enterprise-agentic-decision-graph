@@ -1,0 +1,214 @@
+[
+    {
+        "lead_id": "L-P2-1000",
+        "company": "FinTrust Bank - Div 0",
+        "industry": "Finance",
+        "country": "US",
+        "raw_employees": 6000,
+        "raw_revenue": 761844000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 600000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": true,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-P2-1001",
+        "company": "NovaHealth - Div 1",
+        "industry": "Healthcare",
+        "country": "UK",
+        "raw_employees": 1500,
+        "raw_revenue": 593988000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 150000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": true,
+            "gdpr_required": true,
+            "data_residency": "UK"
+        }
+    },
+    {
+        "lead_id": "L-P2-1002",
+        "company": "Stealth AI - Div 2",
+        "industry": "Technology",
+        "country": "US",
+        "raw_employees": 500,
+        "raw_revenue": 152137500,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX",
+            "Requires On-Premises"
+        ],
+        "budget": 50000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-P2-1003",
+        "company": "RetailGiant - Div 3",
+        "industry": "Retail",
+        "country": "US",
+        "raw_employees": 500,
+        "raw_revenue": 138802500,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 50000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-P2-1004",
+        "company": "FinTrust Bank - Div 4",
+        "industry": "Finance",
+        "country": "US",
+        "raw_employees": 6000,
+        "raw_revenue": 2642826000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 600000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": true,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-P2-1005",
+        "company": "NovaHealth - Div 5",
+        "industry": "Healthcare",
+        "country": "UK",
+        "raw_employees": 1500,
+        "raw_revenue": 336333000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 150000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": true,
+            "gdpr_required": true,
+            "data_residency": "UK"
+        }
+    },
+    {
+        "lead_id": "L-P2-1006",
+        "company": "Stealth AI - Div 6",
+        "industry": "Technology",
+        "country": "US",
+        "raw_employees": 500,
+        "raw_revenue": 58964500,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX",
+            "Requires On-Premises"
+        ],
+        "budget": 50000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-P2-1007",
+        "company": "RetailGiant - Div 7",
+        "industry": "Retail",
+        "country": "US",
+        "raw_employees": 500,
+        "raw_revenue": 235757500,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 50000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-P2-1008",
+        "company": "FinTrust Bank - Div 8",
+        "industry": "Finance",
+        "country": "US",
+        "raw_employees": 6000,
+        "raw_revenue": 2914080000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 600000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": true,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-P2-1009",
+        "company": "NovaHealth - Div 9",
+        "industry": "Healthcare",
+        "country": "UK",
+        "raw_employees": 1500,
+        "raw_revenue": 640162500,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 150000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": true,
+            "gdpr_required": true,
+            "data_residency": "UK"
+        }
+    }
+]

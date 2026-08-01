@@ -1,0 +1,638 @@
+[
+    {
+        "lead_id": "L-1000",
+        "company": "FinTrust Bank - Div 0",
+        "industry": "Finance",
+        "country": "US",
+        "raw_employees": 6000,
+        "raw_revenue": 1390764000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 600000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": true,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1001",
+        "company": "GlobalPay - Div 1",
+        "industry": "Finance",
+        "country": "US",
+        "raw_employees": 3000,
+        "raw_revenue": 1203876000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 300000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": true,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1002",
+        "company": "CapitalFlow - Div 2",
+        "industry": "Finance",
+        "country": "US",
+        "raw_employees": 8000,
+        "raw_revenue": 2707056000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 800000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": true,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1003",
+        "company": "WealthFrontier - Div 3",
+        "industry": "Finance",
+        "country": "US",
+        "raw_employees": 4500,
+        "raw_revenue": 762025500,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 450000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": true,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1004",
+        "company": "NovaHealth - Div 4",
+        "industry": "Healthcare",
+        "country": "UK",
+        "raw_employees": 1500,
+        "raw_revenue": 660529500,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 150000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": true,
+            "gdpr_required": true,
+            "data_residency": "UK"
+        }
+    },
+    {
+        "lead_id": "L-1005",
+        "company": "LondonClinic - Div 5",
+        "industry": "Healthcare",
+        "country": "UK",
+        "raw_employees": 2000,
+        "raw_revenue": 651752000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 200000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": true,
+            "gdpr_required": true,
+            "data_residency": "UK"
+        }
+    },
+    {
+        "lead_id": "L-1006",
+        "company": "EuroMed - Div 6",
+        "industry": "Healthcare",
+        "country": "DE",
+        "raw_employees": 1000,
+        "raw_revenue": 163595000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 100000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": true,
+            "gdpr_required": true,
+            "data_residency": "DE"
+        }
+    },
+    {
+        "lead_id": "L-1007",
+        "company": "Stealth AI - Div 7",
+        "industry": "Technology",
+        "country": "US",
+        "raw_employees": 500,
+        "raw_revenue": 111555000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX",
+            "Requires On-Premises"
+        ],
+        "budget": 50000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1008",
+        "company": "CloudNine - Div 8",
+        "industry": "Technology",
+        "country": "US",
+        "raw_employees": 750,
+        "raw_revenue": 112352250,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX",
+            "Requires On-Premises"
+        ],
+        "budget": 75000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1009",
+        "company": "DevOps Ninja - Div 9",
+        "industry": "Technology",
+        "country": "US",
+        "raw_employees": 400,
+        "raw_revenue": 69879200,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX",
+            "Requires On-Premises"
+        ],
+        "budget": 40000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1010",
+        "company": "RetailGiant - Div 10",
+        "industry": "Retail",
+        "country": "US",
+        "raw_employees": 500,
+        "raw_revenue": 122865500,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 50000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1011",
+        "company": "EduLearn - Div 11",
+        "industry": "Education",
+        "country": "CA",
+        "raw_employees": 800,
+        "raw_revenue": 123108800,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 80000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "CA"
+        }
+    },
+    {
+        "lead_id": "L-1012",
+        "company": "AutoDrive GmbH - Div 12",
+        "industry": "Manufacturing",
+        "country": "US",
+        "raw_employees": 1200,
+        "raw_revenue": 189385200,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 120000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1013",
+        "company": "FinTrust Bank - Div 13",
+        "industry": "Finance",
+        "country": "US",
+        "raw_employees": 6000,
+        "raw_revenue": 2102310000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 600000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": true,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1014",
+        "company": "GlobalPay - Div 14",
+        "industry": "Finance",
+        "country": "US",
+        "raw_employees": 3000,
+        "raw_revenue": 1192536000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 300000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": true,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1015",
+        "company": "CapitalFlow - Div 15",
+        "industry": "Finance",
+        "country": "US",
+        "raw_employees": 8000,
+        "raw_revenue": 990360000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 800000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": true,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1016",
+        "company": "WealthFrontier - Div 16",
+        "industry": "Finance",
+        "country": "US",
+        "raw_employees": 4500,
+        "raw_revenue": 1045129500,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 450000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": true,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1017",
+        "company": "NovaHealth - Div 17",
+        "industry": "Healthcare",
+        "country": "UK",
+        "raw_employees": 1500,
+        "raw_revenue": 552262500,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 150000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": true,
+            "gdpr_required": true,
+            "data_residency": "UK"
+        }
+    },
+    {
+        "lead_id": "L-1018",
+        "company": "LondonClinic - Div 18",
+        "industry": "Healthcare",
+        "country": "UK",
+        "raw_employees": 2000,
+        "raw_revenue": 464770000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 200000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": true,
+            "gdpr_required": true,
+            "data_residency": "UK"
+        }
+    },
+    {
+        "lead_id": "L-1019",
+        "company": "EuroMed - Div 19",
+        "industry": "Healthcare",
+        "country": "DE",
+        "raw_employees": 1000,
+        "raw_revenue": 375508000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 100000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": true,
+            "gdpr_required": true,
+            "data_residency": "DE"
+        }
+    },
+    {
+        "lead_id": "L-1020",
+        "company": "Stealth AI - Div 20",
+        "industry": "Technology",
+        "country": "US",
+        "raw_employees": 500,
+        "raw_revenue": 71210000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX",
+            "Requires On-Premises"
+        ],
+        "budget": 50000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1021",
+        "company": "CloudNine - Div 21",
+        "industry": "Technology",
+        "country": "US",
+        "raw_employees": 750,
+        "raw_revenue": 284394750,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX",
+            "Requires On-Premises"
+        ],
+        "budget": 75000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1022",
+        "company": "DevOps Ninja - Div 22",
+        "industry": "Technology",
+        "country": "US",
+        "raw_employees": 400,
+        "raw_revenue": 158607200,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX",
+            "Requires On-Premises"
+        ],
+        "budget": 40000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1023",
+        "company": "RetailGiant - Div 23",
+        "industry": "Retail",
+        "country": "US",
+        "raw_employees": 500,
+        "raw_revenue": 124796000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 50000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1024",
+        "company": "EduLearn - Div 24",
+        "industry": "Education",
+        "country": "CA",
+        "raw_employees": 800,
+        "raw_revenue": 391406400,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 80000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "CA"
+        }
+    },
+    {
+        "lead_id": "L-1025",
+        "company": "AutoDrive GmbH - Div 25",
+        "industry": "Manufacturing",
+        "country": "US",
+        "raw_employees": 1200,
+        "raw_revenue": 535658400,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 120000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": false,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1026",
+        "company": "FinTrust Bank - Div 26",
+        "industry": "Finance",
+        "country": "US",
+        "raw_employees": 6000,
+        "raw_revenue": 2855400000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 600000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": true,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1027",
+        "company": "GlobalPay - Div 27",
+        "industry": "Finance",
+        "country": "US",
+        "raw_employees": 3000,
+        "raw_revenue": 1387185000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 300000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": true,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1028",
+        "company": "CapitalFlow - Div 28",
+        "industry": "Finance",
+        "country": "US",
+        "raw_employees": 8000,
+        "raw_revenue": 2012824000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 800000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": true,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    },
+    {
+        "lead_id": "L-1029",
+        "company": "WealthFrontier - Div 29",
+        "industry": "Finance",
+        "country": "US",
+        "raw_employees": 4500,
+        "raw_revenue": 1041813000,
+        "current_vendor": "NICE",
+        "pain_points": [
+            "High latency",
+            "Poor UX"
+        ],
+        "budget": 450000,
+        "timeline": "1 month",
+        "security_needs": {
+            "soc2_required": true,
+            "hipaa_required": false,
+            "gdpr_required": false,
+            "data_residency": "US"
+        }
+    }
+]

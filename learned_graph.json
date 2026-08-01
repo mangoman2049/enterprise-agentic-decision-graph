@@ -1,0 +1,14 @@
+{
+    "Healthcare | Security Blocker: ['GDPR Data Residency: EU region deployment required (Not supported yet)']": {
+        "approved": 0,
+        "rejected": 5
+    },
+    "Finance | Deal > $250k (Strategic)": {
+        "approved": 2,
+        "rejected": 1
+    },
+    "Healthcare | Security Blocker: ['GDPR Data Residency: EU region deployment required (Not supported yet)', 'HIPAA: BAA signing required']": {
+        "approved": 1,
+        "rejected": 2
+    }
+}
