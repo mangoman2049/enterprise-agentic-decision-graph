@@ -6,8 +6,6 @@ class QualificationAgent(BaseAgent):
         super().__init__("qualification", "Applies BANT scoring to determine confidence.")
 
     async def _execute(self, context: dict, span) -> dict:
-        await asyncio.sleep(0.1)
-        
         score = 0
         
         # B: Budget

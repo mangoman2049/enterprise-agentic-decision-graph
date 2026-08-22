@@ -17,8 +17,6 @@ class ResearchAgent(BaseAgent):
             crm_data = self._parse_mcp_result(crm_result)
             span.add_event("crm_lookup", attributes={"status": crm_data.get("status", "Unknown")})
             
-        await asyncio.sleep(0.2)
-        
         return {
             "crm_status": crm_data.get("status", "New Prospect"),
             "enriched_revenue": context.get("raw_revenue", 0),

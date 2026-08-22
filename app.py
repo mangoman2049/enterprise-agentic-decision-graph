@@ -235,6 +235,10 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# Enable GZIP compression for all responses > 500 bytes (reduces payload by up to 85%)
+from fastapi.middleware.gzip import GZipMiddleware
+app.add_middleware(GZipMiddleware, minimum_size=500)
+
 # ─── PYDANTIC MODELS FOR APIS ──────────────────────────────────────────────────
 class DecisionRequest(BaseModel):
     decision: str = Field(..., description="'approved' or 'rejected'")

@@ -6,8 +6,6 @@ class LeadIntakeAgent(BaseAgent):
         super().__init__("lead_intake", "Extracts intent and validates raw data.")
 
     async def _execute(self, context: dict, span) -> dict:
-        await asyncio.sleep(0.1) # Simulate think time
-        
         # Determine Urgency
         urgency = "Low"
         if "1 month" in context.get("timeline", "") or "3 months" in context.get("timeline", ""):

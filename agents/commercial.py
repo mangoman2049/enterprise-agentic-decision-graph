@@ -6,8 +6,6 @@ class CommercialAgent(BaseAgent):
         super().__init__("commercial", "Calculates Estimated ARR and Risk.")
 
     async def _execute(self, context: dict, span) -> dict:
-        await asyncio.sleep(0.1)
-        
         employees = context.get("raw_employees", 0)
         budget = context.get("budget")
         

@@ -1,4 +1,4 @@
-﻿"""
+"""
 NOTCRM - Regression Test Runner
 ================================
 Automated Regression Runner enforcing the 0-Regression Policy.

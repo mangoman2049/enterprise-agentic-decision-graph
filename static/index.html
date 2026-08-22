@@ -129,8 +129,9 @@
         /* Modal */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.6); display: none; justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(4px); }
         .modal-overlay.active { display: flex; }
-        .modal { background: var(--surface); width: 100%; max-width: 600px; border-radius: 12px; padding: 32px; position: relative; max-height: 90vh; overflow-y: auto; }
-        .modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 20px; color: var(--text-muted); cursor: pointer; }
+        .modal { background: var(--surface); width: 100%; max-width: 600px; border-radius: 12px; padding: 32px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .modal-close { position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 50%; background: #F1F5F9; border: 1px solid #E2E8F0; font-size: 15px; font-weight: 700; color: #475569; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 100; transition: all 0.2s ease; }
+        .modal-close:hover { background: #E2E8F0; color: #0F172A; transform: scale(1.06); }
         .quiz-question { margin-bottom: 24px; display: none; }
         .quiz-question.active { display: block; }
         .quiz-option { display: block; width: 100%; text-align: left; padding: 16px; margin-bottom: 12px; background: var(--canvas); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 14px; transition: all 0.2s; }
@@ -892,7 +893,7 @@
     <!-- Documentation & Standards Modal -->
     <div class="modal-overlay" id="docs-modal">
         <div class="modal" style="max-width: 860px; max-height: 88vh;">
-            <button class="modal-close" onclick="closeDocsModal()">×</button>
+            <button class="modal-close" onclick="closeDocsModal()" aria-label="Close Documentation" title="Close Window">✕</button>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
                 <div>
                     <h2 style="font-size: 20px; margin-bottom: 4px;">Documentation & Engineering Standards</h2>
@@ -1091,23 +1092,36 @@
                     <!-- Populated by JS -->
                 </div>
             </div>
+
+            <!-- Docs Modal Footer -->
+            <div style="display: flex; justify-content: flex-end; margin-top: 24px; border-top: 1px solid var(--border); padding-top: 16px;">
+                <button class="btn-secondary" onclick="closeDocsModal()" style="font-size: 13px; padding: 8px 18px;">Close Window</button>
+            </div>
         </div>
     </div>
 
     <!-- Knowledge Check Modal -->
     <div class="modal-overlay" id="quiz-modal">
         <div class="modal">
-            <button class="modal-close" onclick="closeModal()">×</button>
-            <h2 style="margin-bottom: 24px;">Knowledge Check</h2>
+            <button class="modal-close" onclick="closeModal()" aria-label="Close Knowledge Check" title="Close Window">✕</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+                <div>
+                    <h2 style="font-size: 20px; margin-bottom: 2px;">Knowledge Check</h2>
+                    <p style="font-size: 12px; color: var(--text-muted);">6-scenario engineering assessment on Agentic AI, FastMCP, and Verification</p>
+                </div>
+            </div>
             
             <div id="quiz-container">
                 <!-- Populated by JS -->
             </div>
             
-            <div style="display: flex; justify-content: space-between; margin-top: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; border-top: 1px solid var(--border); padding-top: 16px;">
                 <button class="btn-secondary" id="quiz-prev" onclick="navQuiz(-1)" disabled>Previous</button>
                 <div style="font-size: 13px; color: var(--text-muted); align-self: center;" id="quiz-progress">Question 1 of 6</div>
-                <button class="btn-primary" id="quiz-next" onclick="navQuiz(1)">Next</button>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn-outline" onclick="closeModal()" style="font-size: 13px; padding: 8px 14px;">Exit</button>
+                    <button class="btn-primary" id="quiz-next" onclick="navQuiz(1)">Next</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1115,7 +1129,7 @@
     <!-- Knowledge Graph Fullscreen Modal -->
     <div class="modal-overlay" id="kg-modal">
         <div class="modal" style="max-width: 1000px; width: 92vw; height: 86vh; display: flex; flex-direction: column; padding: 20px;">
-            <button class="modal-close" onclick="closeGraphModal()">×</button>
+            <button class="modal-close" onclick="closeGraphModal()" aria-label="Close Knowledge Graph" title="Close Window">✕</button>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
                 <div>
                     <h3 style="font-size: 18px; color: var(--text-main); margin-bottom: 2px;">🧠 Enterprise Brain Knowledge Graph (Expanded Network)</h3>
@@ -1124,6 +1138,9 @@
             </div>
             <div style="flex: 1; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: #FAFAFA;">
                 <iframe src="/api/graph" style="width: 100%; height: 100%; border: none;" title="Expanded Knowledge Graph"></iframe>
+            </div>
+            <div style="display: flex; justify-content: flex-end; margin-top: 12px; border-top: 1px solid var(--border); padding-top: 10px;">
+                <button class="btn-secondary" onclick="closeGraphModal()" style="font-size: 12px; padding: 6px 14px;">Close Graph</button>
             </div>
         </div>
     </div>
@@ -2487,6 +2504,27 @@
             document.getElementById('kg-modal').classList.remove('active');
         }
 
+        // Global Modal Interactivity: Close on Backdrop Click & Escape Key
+        document.addEventListener('DOMContentLoaded', () => {
+            ['docs-modal', 'quiz-modal', 'kg-modal'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('click', (e) => {
+                        if (e.target === el) {
+                            el.classList.remove('active');
+                        }
+                    });
+                }
+            });
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeDocsModal();
+                closeModal();
+                closeGraphModal();
+            }
+        });
     </script>
 </body>
 </html>
