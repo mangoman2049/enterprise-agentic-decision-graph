@@ -1,0 +1,7 @@
+lead_id,company,industry,annual_revenue_usd,employee_count,urgency,pain_points,compliance_needs,requested_tier
+TECH-201,CloudScale AI Infrastructure,Technology,120000000,850,High,Multi-Region Failover;Kubernetes Operator;SOC2 Type II,SOC2;HIPAA,Enterprise
+TECH-202,CyberGuard ZeroTrust,Technology,65000000,420,High,FedRAMP Authorization;Prompt Injection Defense;SAM2 SSO,SOC2;FedRAMP,Enterprise
+TECH-203,DataSync Analytics,Technology,18000000,160,Medium,Real-Time Pipeline;CDC Sync;SOC2 Compliance,SOC2,Mid-Market
+TECH-204,Stealth AI Labs,Technology,9500000,45,High,On-Premises Air-Gapped Deployment;Model Export,SOC2,Growth
+TECH-205,DevOps Velocity Systems,Technology,42000000,310,High,CI/CD Pipeline Automation;Secrets Management;GDPR,GDPR;SOC2,Enterprise
+TECH-206,API Gateway Network,Technology,15000000,110,Low,Rate Limiting;GraphQL Subscriptions,SOC2,Mid-Market

@@ -82,7 +82,7 @@ def generate_datasets():
     with open(os.path.join(base_dir, "phase2_testing.json"), "w", encoding="utf-8") as f:
         json.dump(p2_leads, f, indent=4)
         
-    print("✅ Generated V5 Datasets: phase1_training.json and phase2_testing.json")
+    print("[OK] Generated V5 Datasets: phase1_training.json and phase2_testing.json")
 
 if __name__ == "__main__":
     generate_datasets()

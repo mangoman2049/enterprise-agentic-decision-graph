@@ -14,7 +14,7 @@ if sys.platform == "win32":
 
 async def main():
     print("=========================================================")
-    print(" 🤖 V3 ENTERPRISE AI: CONTEXT GRAPH & INSTITUTIONAL MEMORY")
+    print(" [AI] V3 ENTERPRISE AI: CONTEXT GRAPH & INSTITUTIONAL MEMORY")
     print("=========================================================\n")
     
     # Initialize the Context Graph Engine
@@ -29,19 +29,19 @@ async def main():
     # Load generated data
     data_path = os.path.join(base_dir, "enterprise_dataset.json")
     if not os.path.exists(data_path):
-        print("❌ Dataset missing. Run data_generator.py first.")
+        print("[X] Dataset missing. Run data_generator.py first.")
         return
         
     with open(data_path, "r", encoding="utf-8") as f:
         leads = json.load(f)
         
     # Start MCP clients via stdio
-    print("🔌 Booting Enterprise MCP Servers (CRM, KB, Security)...")
+    print("[BOOT] Booting Enterprise MCP Servers (CRM, KB, Security)...")
     async with Client(crm_path) as crm_client, \
                Client(kb_path) as kb_client, \
                Client(sec_path) as sec_client:
         
-        print("✅ Servers online. Booting Orchestrator...")
+        print("[OK] Servers online. Booting Orchestrator...")
         engine = WorkflowEngine(crm_client, kb_client, sec_client, graph_engine)
         
         results = []
@@ -51,7 +51,7 @@ async def main():
             results.append((lead['company'], result['status'], result.get('arr', 0)))
             
         print("\n=========================================================")
-        print(" 📊 FINAL PIPELINE DASHBOARD")
+        print(" [STATS] FINAL PIPELINE DASHBOARD")
         print("=========================================================")
         print(f" {'Company':<30} | {'ARR':<12} | {'Disposition'}")
         print("-" * 65)
@@ -63,13 +63,13 @@ async def main():
                 total_arr += arr
                 
         print("-" * 65)
-        print(f" 💰 Total Pipeline Generated: ${total_arr:,}")
+        print(f" [] Total Pipeline Generated: ${total_arr:,}")
         print("=========================================================\n")
         
         # Export Graph Data
         export_path = os.path.join(base_dir, "learned_graph.json")
         graph_engine.export_graph_data(export_path)
-        print(f"🧠 Context Graph saved to {export_path}")
+        print(f"[BRAIN] Context Graph saved to {export_path}")
 
 if __name__ == "__main__":
     asyncio.run(main())

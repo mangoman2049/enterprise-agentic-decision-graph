@@ -1,0 +1,51 @@
+lead_id,company_name,industry,annual_revenue_usd,architecture_type,pain_points,compliance_needs,urgency,contact_email,recent_news,stock_trend,bankruptcy_flag,funding_event
+LEAD-T001,CloudScale AI,Technology,600000,Cloud-Native SaaS,"Enterprise SAML, SOC2 Type II, API Webhooks","SOC2, GDPR",High,tech_vp@cloudscale.ai,Recent  Series C funding announced,UP_12PCT,NORMAL,SERIES_C
+LEAD-T002,DataSync Corp,Technology,50000,Data Pipeline SaaS,Basic ETL Connectors,SOC2,Low,eng@datasync.com,Acquisition rumors by Snowflake,UP_5PCT,NORMAL,MA_TARGET
+LEAD-T003,Stealth AI Labs,Technology,120000,AI Inference Engine,"Sub-10ms latency, high-throughput GPU API","SOC2, HIPAA",High,founder@stealth.ai,New seed round closed,FLAT,NORMAL,NONE
+LEAD-T004,LegacySoft Inc,Technology,400000,On-Premises ERP,"Strict Air-Gapped Deployment, No Cloud Egress",SOC2,High,cio@legacysoft.com,Chapter 11 Bankruptcy protection filed,DOWN_78PCT,BANKRUPTCY,NONE
+LEAD-T005,CyberGuard ZeroTrust,Technology,450000,Security Platform,"FedRAMP Moderate, Air-Gapped VPC","FedRAMP, SOC2",High,cso@cyberguard.io,Awarded  DoD contract,UP_24PCT,NORMAL,DOD_AWARD
+LEAD-T006,DevOps Pro Systems,Technology,95000,CI/CD Platform,Kubernetes Helm Deployments,SOC2,Medium,lead@devopspro.com,Stable cashflow positive quarter,UP_2PCT,NORMAL,NONE
+LEAD-T007,Quantum Edge Compute,Technology,750000,Distributed Quantum,Quantum simulator SDK,"SOC2, ISO27001",High,cto@quantumedge.tech,Announced strategic partnership with AWS,UP_18PCT,NORMAL,STRATEGIC_ALLIANCE
+LEAD-T008,AIGraph Systems,Technology,220000,Graph Neural Nets,Graph database indexing,"SOC2, GDPR",Medium,vp@aigraph.ai,CEO keynote at NeurIPS,FLAT,NORMAL,NONE
+LEAD-T009,NeuralNet Security,Technology,310000,AI Firewall,Real-time packet inspection,SOC2 Type II,High,sec@neuralnet.com,Secured Series B ,UP_8PCT,NORMAL,SERIES_B
+LEAD-T010,ByteForge Software,Technology,18000,Developer Tools,VS Code extension sync,None,Low,dev@byteforge.org,Bootstrapped developer tool,FLAT,NORMAL,NONE
+LEAD-T011,CodePilot Inc,Technology,520000,AI Pair Programmer,Enterprise code indexer,"SOC2, GDPR",High,eng@codepilot.ai,Surpassed 1M active developers,UP_35PCT,NORMAL,ACQUISITION_RUMOR
+LEAD-T012,TrustStack Cloud,Technology,380000,Compliance SaaS,Automated evidence collection,"SOC2, FedRAMP",High,audit@truststack.io,Passed SOC2 Type II audit,UP_4PCT,NORMAL,NONE
+LEAD-T013,CloudVault Storage,Technology,290000,Encrypted Object Store,Immutable S3 buckets,"SOC2, HIPAA",Medium,ops@cloudvault.com,Revenue grew 40% YoY,UP_11PCT,NORMAL,NONE
+LEAD-T014,InsolvAI Technologies,Technology,210000,Analytics Bot,Automated dashboard generator,SOC2,Low,cfo@insolvai.com,"Severe liquidity crisis, restructuring debt",DOWN_92PCT,BANKRUPTCY,NONE
+LEAD-T015,HyperScale Grid,Technology,850000,Distributed Cloud,Multi-region mesh network,"SOC2, ISO27001",High,grid@hyperscale.net,Expanding to 14 EU regions,UP_15PCT,NORMAL,EXPANSION
+LEAD-T016,TechVertex-16 Corp,Technology,684000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex16.com,Quarterly enterprise expansion,UP_5PCT,NORMAL,NONE
+LEAD-T017,TechVertex-17 Corp,Technology,55000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",Medium,contact@techvertex17.com,Product feature update,UP_25PCT,NORMAL,NONE
+LEAD-T018,TechVertex-18 Corp,Technology,311000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex18.com,Quarterly enterprise expansion,UP_9PCT,NORMAL,SERIES_C
+LEAD-T019,TechVertex-19 Corp,Technology,258000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex19.com,Product feature update,UP_6PCT,NORMAL,NONE
+LEAD-T020,TechVertex-20 Corp,Technology,784000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex20.com,Quarterly enterprise expansion,UP_5PCT,NORMAL,NONE
+LEAD-T021,TechVertex-21 Corp,Technology,722000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex21.com,Quarterly enterprise expansion,UP_25PCT,NORMAL,NONE
+LEAD-T022,TechVertex-22 Corp,Technology,943000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex22.com,Quarterly enterprise expansion,DOWN_85PCT,BANKRUPTCY,NONE
+LEAD-T023,TechVertex-23 Corp,Technology,588000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex23.com,Quarterly enterprise expansion,UP_4PCT,NORMAL,NONE
+LEAD-T024,TechVertex-24 Corp,Technology,634000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex24.com,Quarterly enterprise expansion,UP_15PCT,NORMAL,NONE
+LEAD-T025,TechVertex-25 Corp,Technology,62000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",Medium,contact@techvertex25.com,Product feature update,UP_2PCT,NORMAL,MA_TARGET
+LEAD-T026,TechVertex-26 Corp,Technology,125000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",Medium,contact@techvertex26.com,Product feature update,UP_8PCT,NORMAL,NONE
+LEAD-T027,TechVertex-27 Corp,Technology,268000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex27.com,Product feature update,UP_18PCT,NORMAL,NONE
+LEAD-T028,TechVertex-28 Corp,Technology,646000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex28.com,Quarterly enterprise expansion,UP_2PCT,NORMAL,NONE
+LEAD-T029,TechVertex-29 Corp,Technology,604000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex29.com,Quarterly enterprise expansion,UP_8PCT,NORMAL,NONE
+LEAD-T030,TechVertex-30 Corp,Technology,763000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex30.com,Quarterly enterprise expansion,UP_22PCT,NORMAL,NONE
+LEAD-T031,TechVertex-31 Corp,Technology,748000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex31.com,Quarterly enterprise expansion,UP_19PCT,NORMAL,NONE
+LEAD-T032,TechVertex-32 Corp,Technology,459000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex32.com,Quarterly enterprise expansion,UP_9PCT,NORMAL,NONE
+LEAD-T033,TechVertex-33 Corp,Technology,489000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex33.com,Quarterly enterprise expansion,UP_20PCT,NORMAL,SERIES_C
+LEAD-T034,TechVertex-34 Corp,Technology,314000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex34.com,Quarterly enterprise expansion,UP_2PCT,NORMAL,NONE
+LEAD-T035,TechVertex-35 Corp,Technology,807000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex35.com,Quarterly enterprise expansion,UP_7PCT,NORMAL,NONE
+LEAD-T036,TechVertex-36 Corp,Technology,744000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex36.com,Quarterly enterprise expansion,UP_15PCT,NORMAL,NONE
+LEAD-T037,TechVertex-37 Corp,Technology,378000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex37.com,Quarterly enterprise expansion,UP_10PCT,NORMAL,NONE
+LEAD-T038,TechVertex-38 Corp,Technology,189000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",Medium,contact@techvertex38.com,Product feature update,UP_8PCT,NORMAL,NONE
+LEAD-T039,TechVertex-39 Corp,Technology,811000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex39.com,Quarterly enterprise expansion,DOWN_85PCT,BANKRUPTCY,NONE
+LEAD-T040,TechVertex-40 Corp,Technology,374000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex40.com,Quarterly enterprise expansion,UP_5PCT,NORMAL,NONE
+LEAD-T041,TechVertex-41 Corp,Technology,124000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",Medium,contact@techvertex41.com,Product feature update,UP_14PCT,NORMAL,NONE
+LEAD-T042,TechVertex-42 Corp,Technology,129000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",Medium,contact@techvertex42.com,Product feature update,UP_13PCT,NORMAL,MA_TARGET
+LEAD-T043,TechVertex-43 Corp,Technology,897000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex43.com,Quarterly enterprise expansion,UP_13PCT,NORMAL,NONE
+LEAD-T044,TechVertex-44 Corp,Technology,648000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex44.com,Quarterly enterprise expansion,UP_10PCT,NORMAL,NONE
+LEAD-T045,TechVertex-45 Corp,Technology,856000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex45.com,Quarterly enterprise expansion,UP_3PCT,NORMAL,NONE
+LEAD-T046,TechVertex-46 Corp,Technology,777000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex46.com,Quarterly enterprise expansion,UP_16PCT,NORMAL,NONE
+LEAD-T047,TechVertex-47 Corp,Technology,579000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex47.com,Quarterly enterprise expansion,UP_5PCT,NORMAL,SERIES_C
+LEAD-T048,TechVertex-48 Corp,Technology,417000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex48.com,Quarterly enterprise expansion,UP_4PCT,NORMAL,NONE
+LEAD-T049,TechVertex-49 Corp,Technology,595000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex49.com,Quarterly enterprise expansion,UP_11PCT,NORMAL,NONE
+LEAD-T050,TechVertex-50 Corp,Technology,879000,Cloud Enterprise SaaS,"REST API, SSO, Webhooks","SOC2, GDPR",High,contact@techvertex50.com,Quarterly enterprise expansion,UP_22PCT,NORMAL,NONE

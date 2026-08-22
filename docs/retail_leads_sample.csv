@@ -1,0 +1,7 @@
+lead_id,company,industry,annual_revenue_usd,employee_count,urgency,pain_points,compliance_needs,requested_tier
+RETAIL-301,Apex Mega Outlets,Retail,320000000,4500,High,Omnichannel Inventory Sync;POS Terminal Failover;PCI-DSS v4,PCI-DSS,Enterprise
+RETAIL-302,OmniStore Global,Retail,180000000,2800,High,Real-Time Personalization;Loyalty Rewards API;GDPR Consent,GDPR;PCI-DSS,Enterprise
+RETAIL-303,FashionDirect Apparel,Retail,38000000,480,Medium,Returns Automation;Shopify Plus Integration,PCI-DSS,Mid-Market
+RETAIL-304,Urban Groceries Co,Retail,62000000,920,High,Cold-Chain Logistics;Same-Day Dispatch Tracking,SOC2,Enterprise
+RETAIL-305,Boutique Jewelry House,Retail,14000000,75,Low,High-Value Escrow Payments;Customer Vault,PCI-DSS,Mid-Market
+RETAIL-306,QuickSupply Convenience,Retail,8900000,140,High,Self-Checkout Kiosk API;Inventory Reordering,PCI-DSS,Growth

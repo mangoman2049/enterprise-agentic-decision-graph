@@ -13,7 +13,7 @@ if sys.platform == "win32":
 
 async def run_phase(engine, leads, phase_name, phase_id):
     print(f"\n{'='*60}")
-    print(f" 🚀 {phase_name} ")
+    print(f" [>] {phase_name} ")
     print(f"{'='*60}\n")
     
     results = []
@@ -23,7 +23,7 @@ async def run_phase(engine, leads, phase_name, phase_id):
         results.append((lead['company'], result['status'], result.get('arr', 0)))
         
     print("\n=========================================================")
-    print(f" 📊 {phase_name} DASHBOARD")
+    print(f" [STATS] {phase_name} DASHBOARD")
     print("=========================================================")
     print(f" {'Company':<30} | {'ARR':<12} | {'Disposition'}")
     print("-" * 65)
@@ -35,13 +35,13 @@ async def run_phase(engine, leads, phase_name, phase_id):
             total_arr += arr
             
     print("-" * 65)
-    print(f" 💰 Total Pipeline Generated: ${total_arr:,}")
+    print(f" [] Total Pipeline Generated: ${total_arr:,}")
     print("=========================================================\n")
 
 
 async def main():
     print("=========================================================")
-    print(" 🧠 V5 ENTERPRISE KNOWLEDGE LAYER SIMULATION")
+    print(" [BRAIN] V5 ENTERPRISE KNOWLEDGE LAYER SIMULATION")
     print("=========================================================\n")
     
     knowledge_graph = KnowledgeGraphEngine()
@@ -59,24 +59,24 @@ async def main():
     with open(p2_path, "r", encoding="utf-8") as f:
         p2_leads = json.load(f)
         
-    print("🔌 Booting Enterprise MCP Servers (CRM, KB, Security)...")
+    print("[BOOT] Booting Enterprise MCP Servers (CRM, KB, Security)...")
     async with Client(crm_path) as crm_client, \
                Client(kb_path) as kb_client, \
                Client(sec_path) as sec_client:
         
-        print("✅ Servers online. Booting Orchestrator...")
+        print("[OK] Servers online. Booting Orchestrator...")
         engine = WorkflowEngine(crm_client, kb_client, sec_client, knowledge_graph)
         
         # ── PHASE 1: Training & Outcomes ──
-        print("\n⏳ [SIMULATING 6 MONTHS OF HISTORICAL DATA]")
+        print("\n[...] [SIMULATING 6 MONTHS OF HISTORICAL DATA]")
         print("   In Phase 1, the human makes some good and bad decisions.")
         print("   The Knowledge Graph tracks the ultimate OUTCOMES (Churn vs Renewal).")
         await run_phase(engine, p1_leads, "PHASE 1: HISTORICAL TRAINING", "P1")
         
-        print("\n⏳ ... Time Passes ... 6 Months Later ...\n")
+        print("\n[...] ... Time Passes ... 6 Months Later ...\n")
         
         # ── PHASE 2: Live Testing ──
-        print("🌍 [LIVE ENVIRONMENT]")
+        print("[LIVE] [LIVE ENVIRONMENT]")
         print("   Now, processing fresh leads. The Knowledge Graph will warn you")
         print("   if you try to repeat a mistake that previously led to Churn.")
         await run_phase(engine, p2_leads, "PHASE 2: LIVE KNOWLEDGE GRAPH", "P2")

@@ -1,155 +1,136 @@
-<html>
-    <head>
-        <meta charset="utf-8">
-        
-            <script src="lib/bindings/utils.js"></script>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-            
-        
-<center>
-<h1></h1>
-</center>
-
-<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
-<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
-        <link
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
-          crossorigin="anonymous"
-        />
-        <script
-          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
-          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
-          crossorigin="anonymous"
-        ></script>
-
-
-        <center>
-          <h1></h1>
-        </center>
-        <style type="text/css">
-
-             #mynetwork {
-                 width: 100%;
-                 height: 800px;
-                 background-color: #222222;
-                 border: 1px solid lightgray;
-                 position: relative;
-                 float: left;
-             }
-
-             
-
-             
-
-             
-        </style>
-    </head>
-
-
-    <body>
-        <div class="card" style="width: 100%">
-            
-            
-            <div id="mynetwork" class="card-body"></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Brain Knowledge Graph</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        body { background: #FAFAFA; color: #0F172A; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #FFFFFF; border-bottom: 1px solid #E2E8F0; z-index: 10; }
+        .title { font-size: 13px; font-weight: 600; color: #1E293B; }
+        .legend { display: flex; gap: 14px; font-size: 11px; align-items: center; }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        .controls { display: flex; gap: 6px; }
+        .btn { background: #FFFFFF; border: 1px solid #CBD5E1; color: #334155; padding: 4px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500; transition: all 0.15s; }
+        .btn:hover { background: #F1F5F9; border-color: #94A3B8; }
+        #graph-container { flex: 1; position: relative; width: 100%; height: 100%; }
+        svg { width: 100%; height: 100%; cursor: grab; }
+        svg:active { cursor: grabbing; }
+        .node { stroke: #FFFFFF; stroke-width: 2px; cursor: pointer; transition: r 0.2s; }
+        .node:hover { stroke: #4F46E5; stroke-width: 3px; }
+        .node-label { font-size: 10px; fill: #1E293B; pointer-events: none; text-anchor: middle; font-weight: 500; }
+        .link { stroke: #CBD5E1; stroke-opacity: 0.6; stroke-width: 1.5px; }
+        #detail-card { position: absolute; bottom: 16px; right: 16px; width: 280px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); display: none; font-size: 12px; }
+        #detail-card h4 { font-size: 13px; margin-bottom: 6px; color: #0F172A; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">🧠 Enterprise Brain Knowledge Graph (Phase 1 Learned Memory)</div>
+        <div class="legend">
+            <div class="legend-item"><span class="dot" style="background: #0284C7;"></span> Company Deals</div>
+            <div class="legend-item"><span class="dot" style="background: #D97706;"></span> Governance Policy</div>
+            <div class="legend-item"><span class="dot" style="background: #059669;"></span> Renewed / Won</div>
+            <div class="legend-item"><span class="dot" style="background: #DC2626;"></span> Churned / High Risk</div>
         </div>
+        <div class="controls">
+            <button class="btn" onclick="zoomIn()">+ Zoom In</button>
+            <button class="btn" onclick="zoomOut()">- Zoom Out</button>
+            <button class="btn" onclick="resetZoom()">⊙ Reset</button>
+        </div>
+    </div>
 
-        
-        
+    <div id="graph-container">
+        <svg id="graph-svg"></svg>
+        <div id="detail-card">
+            <h4 id="card-title">Node Details</h4>
+            <div id="card-body" style="color: #64748B; margin-top: 4px; line-height: 1.4;">Click any node to inspect learned relationships.</div>
+        </div>
+    </div>
 
-        <script type="text/javascript">
+    <script>
+        const data = {"nodes": [{"id": "Entity|Industry|Finance", "label": "Industry: Finance", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Policy|Finance|Deal > $250k (Strategic)", "label": "Escalation: Deal > $250k (Strategic)", "type": "Policy", "color": "#D97706", "group": "Policy"}, {"id": "Decision|APPROVED|Policy|Finance|Deal > $250k (Strategic)", "label": "Decision: APPROVED", "type": "Decision", "color": "#4F46E5", "group": "Decision"}, {"id": "Outcome|RENEWED|Decision|APPROVED|Policy|Finance|Deal > $250k (Strategic)", "label": "Outcome: RENEWED", "type": "Outcome", "color": "#059669", "group": "Outcome"}, {"id": "Entity|Company|FinTrust Bank - Div 0", "label": "Company: FinTrust Bank - Div 0", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Industry|Healthcare", "label": "Industry: Healthcare", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Policy|Healthcare|Security Blocker: ['GDPR Data Residency']", "label": "Escalation: Security Blocker: ['GDPR Data Residency']", "type": "Policy", "color": "#D97706", "group": "Policy"}, {"id": "Decision|REJECTED|Policy|Healthcare|Security Blocker: ['GDPR Data Residency']", "label": "Decision: REJECTED", "type": "Decision", "color": "#64748B", "group": "Decision"}, {"id": "Outcome|RENEWED|Decision|REJECTED|Policy|Healthcare|Security Blocker: ['GDPR Data Residency']", "label": "Outcome: RENEWED", "type": "Outcome", "color": "#059669", "group": "Outcome"}, {"id": "Entity|Company|NovaHealth - Div 1", "label": "Company: NovaHealth - Div 1", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Industry|Technology", "label": "Industry: Technology", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Policy|Technology|", "label": "Escalation: ", "type": "Policy", "color": "#D97706", "group": "Policy"}, {"id": "Decision|APPROVED|Policy|Technology|", "label": "Decision: APPROVED", "type": "Decision", "color": "#4F46E5", "group": "Decision"}, {"id": "Outcome|CHURNED|Decision|APPROVED|Policy|Technology|", "label": "Outcome: CHURNED", "type": "Outcome", "color": "#DC2626", "group": "Outcome"}, {"id": "Entity|Company|Stealth AI - Div 2", "label": "Company: Stealth AI - Div 2", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Industry|Retail", "label": "Industry: Retail", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Policy|Retail|", "label": "Escalation: ", "type": "Policy", "color": "#D97706", "group": "Policy"}, {"id": "Decision|APPROVED|Policy|Retail|", "label": "Decision: APPROVED", "type": "Decision", "color": "#4F46E5", "group": "Decision"}, {"id": "Outcome|RENEWED|Decision|APPROVED|Policy|Retail|", "label": "Outcome: RENEWED", "type": "Outcome", "color": "#059669", "group": "Outcome"}, {"id": "Entity|Company|RetailGiant - Div 3", "label": "Company: RetailGiant - Div 3", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|FinTrust Bank - Div 4", "label": "Company: FinTrust Bank - Div 4", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|NovaHealth - Div 5", "label": "Company: NovaHealth - Div 5", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|Stealth AI - Div 6", "label": "Company: Stealth AI - Div 6", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|RetailGiant - Div 7", "label": "Company: RetailGiant - Div 7", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|FinTrust Bank - Div 8", "label": "Company: FinTrust Bank - Div 8", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Outcome|CHURNED|Decision|REJECTED|Policy|Healthcare|Security Blocker: ['GDPR Data Residency']", "label": "Outcome: CHURNED", "type": "Outcome", "color": "#DC2626", "group": "Outcome"}, {"id": "Entity|Company|NovaHealth - Div 9", "label": "Company: NovaHealth - Div 9", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|Stealth AI - Div 10", "label": "Company: Stealth AI - Div 10", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|RetailGiant - Div 11", "label": "Company: RetailGiant - Div 11", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|FinTrust Bank - Div 12", "label": "Company: FinTrust Bank - Div 12", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|NovaHealth - Div 13", "label": "Company: NovaHealth - Div 13", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|Stealth AI - Div 14", "label": "Company: Stealth AI - Div 14", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|RetailGiant - Div 15", "label": "Company: RetailGiant - Div 15", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|FinTrust Bank - Div 16", "label": "Company: FinTrust Bank - Div 16", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|NovaHealth - Div 17", "label": "Company: NovaHealth - Div 17", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|Stealth AI - Div 18", "label": "Company: Stealth AI - Div 18", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|RetailGiant - Div 19", "label": "Company: RetailGiant - Div 19", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|FinTrust Bank - Div 20", "label": "Company: FinTrust Bank - Div 20", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|NovaHealth - Div 21", "label": "Company: NovaHealth - Div 21", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|Stealth AI - Div 22", "label": "Company: Stealth AI - Div 22", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|RetailGiant - Div 23", "label": "Company: RetailGiant - Div 23", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|FinTrust Bank - Div 24", "label": "Company: FinTrust Bank - Div 24", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|NovaHealth - Div 25", "label": "Company: NovaHealth - Div 25", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|Stealth AI - Div 26", "label": "Company: Stealth AI - Div 26", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Outcome|CHURNED|Decision|APPROVED|Policy|Retail|", "label": "Outcome: CHURNED", "type": "Outcome", "color": "#DC2626", "group": "Outcome"}, {"id": "Entity|Company|RetailGiant - Div 27", "label": "Company: RetailGiant - Div 27", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|FinTrust Bank - Div 28", "label": "Company: FinTrust Bank - Div 28", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}, {"id": "Entity|Company|NovaHealth - Div 29", "label": "Company: NovaHealth - Div 29", "type": "Entity", "color": "#0284C7", "group": "Lead / Company"}], "edges": [{"source": "Entity|Industry|Finance", "target": "Policy|Finance|Deal > $250k (Strategic)", "weight": 1}, {"source": "Policy|Finance|Deal > $250k (Strategic)", "target": "Decision|APPROVED|Policy|Finance|Deal > $250k (Strategic)", "weight": 8}, {"source": "Decision|APPROVED|Policy|Finance|Deal > $250k (Strategic)", "target": "Outcome|RENEWED|Decision|APPROVED|Policy|Finance|Deal > $250k (Strategic)", "weight": 8}, {"source": "Entity|Company|FinTrust Bank - Div 0", "target": "Outcome|RENEWED|Decision|APPROVED|Policy|Finance|Deal > $250k (Strategic)", "weight": 1}, {"source": "Entity|Industry|Healthcare", "target": "Policy|Healthcare|Security Blocker: ['GDPR Data Residency']", "weight": 1}, {"source": "Policy|Healthcare|Security Blocker: ['GDPR Data Residency']", "target": "Decision|REJECTED|Policy|Healthcare|Security Blocker: ['GDPR Data Residency']", "weight": 8}, {"source": "Decision|REJECTED|Policy|Healthcare|Security Blocker: ['GDPR Data Residency']", "target": "Outcome|RENEWED|Decision|REJECTED|Policy|Healthcare|Security Blocker: ['GDPR Data Residency']", "weight": 6}, {"source": "Decision|REJECTED|Policy|Healthcare|Security Blocker: ['GDPR Data Residency']", "target": "Outcome|CHURNED|Decision|REJECTED|Policy|Healthcare|Security Blocker: ['GDPR Data Residency']", "weight": 2}, {"source": "Entity|Company|NovaHealth - Div 1", "target": "Outcome|RENEWED|Decision|REJECTED|Policy|Healthcare|Security Blocker: ['GDPR Data Residency']", "weight": 1}, {"source": "Entity|Industry|Technology", "target": "Policy|Technology|", "weight": 1}, {"source": "Policy|Technology|", "target": "Decision|APPROVED|Policy|Technology|", "weight": 7}, {"source": "Decision|APPROVED|Policy|Technology|", "target": "Outcome|CHURNED|Decision|APPROVED|Policy|Technology|", "weight": 7}, {"source": "Entity|Company|Stealth AI - Div 2", "target": "Outcome|CHURNED|Decision|APPROVED|Policy|Technology|", "weight": 1}, {"source": "Entity|Industry|Retail", "target": "Policy|Retail|", "weight": 1}, {"source": "Policy|Retail|", "target": "Decision|APPROVED|Policy|Retail|", "weight": 7}, {"source": "Decision|APPROVED|Policy|Retail|", "target": "Outcome|RENEWED|Decision|APPROVED|Policy|Retail|", "weight": 6}, {"source": "Decision|APPROVED|Policy|Retail|", "target": "Outcome|CHURNED|Decision|APPROVED|Policy|Retail|", "weight": 1}, {"source": "Entity|Company|RetailGiant - Div 3", "target": "Outcome|RENEWED|Decision|APPROVED|Policy|Retail|", "weight": 1}, {"source": "Entity|Company|FinTrust Bank - Div 4", "target": "Outcome|RENEWED|Decision|APPROVED|Policy|Finance|Deal > $250k (Strategic)", "weight": 1}, {"source": "Entity|Company|NovaHealth - Div 5", "target": "Outcome|RENEWED|Decision|REJECTED|Policy|Healthcare|Security Blocker: ['GDPR Data Residency']", "weight": 1}, {"source": "Entity|Company|Stealth AI - Div 6", "target": "Outcome|CHURNED|Decision|APPROVED|Policy|Technology|", "weight": 1}, {"source": "Entity|Company|RetailGiant - Div 7", "target": "Outcome|RENEWED|Decision|APPROVED|Policy|Retail|", "weight": 1}, {"source": "Entity|Company|FinTrust Bank - Div 8", "target": "Outcome|RENEWED|Decision|APPROVED|Policy|Finance|Deal > $250k (Strategic)", "weight": 1}, {"source": "Entity|Company|NovaHealth - Div 9", "target": "Outcome|CHURNED|Decision|REJECTED|Policy|Healthcare|Security Blocker: ['GDPR Data Residency']", "weight": 1}, {"source": "Entity|Company|Stealth AI - Div 10", "target": "Outcome|CHURNED|Decision|APPROVED|Policy|Technology|", "weight": 1}, {"source": "Entity|Company|RetailGiant - Div 11", "target": "Outcome|RENEWED|Decision|APPROVED|Policy|Retail|", "weight": 1}, {"source": "Entity|Company|FinTrust Bank - Div 12", "target": "Outcome|RENEWED|Decision|APPROVED|Policy|Finance|Deal > $250k (Strategic)", "weight": 1}, {"source": "Entity|Company|NovaHealth - Div 13", "target": "Outcome|RENEWED|Decision|REJECTED|Policy|Healthcare|Security Blocker: ['GDPR Data Residency']", "weight": 1}, {"source": "Entity|Company|Stealth AI - Div 14", "target": "Outcome|CHURNED|Decision|APPROVED|Policy|Technology|", "weight": 1}, {"source": "Entity|Company|RetailGiant - Div 15", "target": "Outcome|RENEWED|Decision|APPROVED|Policy|Retail|", "weight": 1}, {"source": "Entity|Company|FinTrust Bank - Div 16", "target": "Outcome|RENEWED|Decision|APPROVED|Policy|Finance|Deal > $250k (Strategic)", "weight": 1}, {"source": "Entity|Company|NovaHealth - Div 17", "target": "Outcome|CHURNED|Decision|REJECTED|Policy|Healthcare|Security Blocker: ['GDPR Data Residency']", "weight": 1}, {"source": "Entity|Company|Stealth AI - Div 18", "target": "Outcome|CHURNED|Decision|APPROVED|Policy|Technology|", "weight": 1}, {"source": "Entity|Company|RetailGiant - Div 19", "target": "Outcome|RENEWED|Decision|APPROVED|Policy|Retail|", "weight": 1}, {"source": "Entity|Company|FinTrust Bank - Div 20", "target": "Outcome|RENEWED|Decision|APPROVED|Policy|Finance|Deal > $250k (Strategic)", "weight": 1}, {"source": "Entity|Company|NovaHealth - Div 21", "target": "Outcome|RENEWED|Decision|REJECTED|Policy|Healthcare|Security Blocker: ['GDPR Data Residency']", "weight": 1}, {"source": "Entity|Company|Stealth AI - Div 22", "target": "Outcome|CHURNED|Decision|APPROVED|Policy|Technology|", "weight": 1}, {"source": "Entity|Company|RetailGiant - Div 23", "target": "Outcome|RENEWED|Decision|APPROVED|Policy|Retail|", "weight": 1}, {"source": "Entity|Company|FinTrust Bank - Div 24", "target": "Outcome|RENEWED|Decision|APPROVED|Policy|Finance|Deal > $250k (Strategic)", "weight": 1}, {"source": "Entity|Company|NovaHealth - Div 25", "target": "Outcome|RENEWED|Decision|REJECTED|Policy|Healthcare|Security Blocker: ['GDPR Data Residency']", "weight": 1}, {"source": "Entity|Company|Stealth AI - Div 26", "target": "Outcome|CHURNED|Decision|APPROVED|Policy|Technology|", "weight": 1}, {"source": "Entity|Company|RetailGiant - Div 27", "target": "Outcome|CHURNED|Decision|APPROVED|Policy|Retail|", "weight": 1}, {"source": "Entity|Company|FinTrust Bank - Div 28", "target": "Outcome|RENEWED|Decision|APPROVED|Policy|Finance|Deal > $250k (Strategic)", "weight": 1}, {"source": "Entity|Company|NovaHealth - Div 29", "target": "Outcome|RENEWED|Decision|REJECTED|Policy|Healthcare|Security Blocker: ['GDPR Data Residency']", "weight": 1}]};
+        const svg = d3.select("#graph-svg");
+        const width = window.innerWidth;
+        const height = window.innerHeight - 50;
 
-              // initialize global variables.
-              var edges;
-              var nodes;
-              var allNodes;
-              var allEdges;
-              var nodeColors;
-              var originalNodes;
-              var network;
-              var container;
-              var options, data;
-              var filter = {
-                  item : '',
-                  property : '',
-                  value : []
-              };
+        const g = svg.append("g");
+        const zoom = d3.zoom().scaleExtent([0.2, 4]).on("zoom", (e) => g.attr("transform", e.transform));
+        svg.call(zoom);
 
-              
+        const simulation = d3.forceSimulation(data.nodes)
+            .force("link", d3.forceLink(data.edges).id(d => d.id).distance(70))
+            .force("charge", d3.forceManyBody().strength(-220))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collision", d3.forceCollide().radius(25));
 
-              
+        const link = g.append("g")
+            .selectAll("line")
+            .data(data.edges)
+            .join("line")
+            .attr("class", "link")
+            .attr("stroke-width", d => Math.min(d.weight * 1.5, 4));
 
-              // This method is responsible for drawing the graph, returns the drawn network
-              function drawGraph() {
-                  var container = document.getElementById('mynetwork');
+        const node = g.append("g")
+            .selectAll("circle")
+            .data(data.nodes)
+            .join("circle")
+            .attr("class", "node")
+            .attr("r", d => d.type === "Policy" ? 14 : d.type === "Outcome" ? 12 : 10)
+            .attr("fill", d => d.color)
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended))
+            .on("click", (e, d) => showDetails(d));
 
-                  
+        const label = g.append("g")
+            .selectAll("text")
+            .data(data.nodes)
+            .join("text")
+            .attr("class", "node-label")
+            .attr("dy", 18)
+            .text(d => d.label.length > 18 ? d.label.substring(0, 16) + "..." : d.label);
 
-                  // parsing and collecting nodes and edges from the python
-                  nodes = new vis.DataSet([{"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Industry|Finance", "label": "Industry: Finance", "shape": "ellipse", "title": "Entity"}, {"color": "#fd7e14", "font": {"color": "white"}, "id": "Policy|Finance|Deal \u003e $250k (Strategic)", "label": "Escalation: Deal \u003e $250k (Strategic)", "shape": "box", "title": "Policy"}, {"color": "#ffc107", "font": {"color": "white"}, "id": "Decision|APPROVED|Policy|Finance|Deal \u003e $250k (Strategic)", "label": "Decision: APPROVED", "shape": "ellipse", "title": "Decision"}, {"color": "#28a745", "font": {"color": "white"}, "id": "Outcome|RENEWED|Decision|APPROVED|Policy|Finance|Deal \u003e $250k (Strategic)", "label": "Outcome: RENEWED", "shape": "ellipse", "title": "Outcome"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|FinTrust Bank - Div 0", "label": "Company: FinTrust Bank - Div 0", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Industry|Healthcare", "label": "Industry: Healthcare", "shape": "ellipse", "title": "Entity"}, {"color": "#fd7e14", "font": {"color": "white"}, "id": "Policy|Healthcare|Security Blocker: [\u0027GDPR Data Residency\u0027]", "label": "Escalation: Security Blocker: [\u0027GDPR Data Residency\u0027]", "shape": "box", "title": "Policy"}, {"color": "#6c757d", "font": {"color": "white"}, "id": "Decision|REJECTED|Policy|Healthcare|Security Blocker: [\u0027GDPR Data Residency\u0027]", "label": "Decision: REJECTED", "shape": "ellipse", "title": "Decision"}, {"color": "#28a745", "font": {"color": "white"}, "id": "Outcome|RENEWED|Decision|REJECTED|Policy|Healthcare|Security Blocker: [\u0027GDPR Data Residency\u0027]", "label": "Outcome: RENEWED", "shape": "ellipse", "title": "Outcome"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|NovaHealth - Div 1", "label": "Company: NovaHealth - Div 1", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Industry|Technology", "label": "Industry: Technology", "shape": "ellipse", "title": "Entity"}, {"color": "#fd7e14", "font": {"color": "white"}, "id": "Policy|Technology|", "label": "Escalation: ", "shape": "box", "title": "Policy"}, {"color": "#ffc107", "font": {"color": "white"}, "id": "Decision|APPROVED|Policy|Technology|", "label": "Decision: APPROVED", "shape": "ellipse", "title": "Decision"}, {"color": "#dc3545", "font": {"color": "white"}, "id": "Outcome|CHURNED|Decision|APPROVED|Policy|Technology|", "label": "Outcome: CHURNED", "shape": "ellipse", "title": "Outcome"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|Stealth AI - Div 2", "label": "Company: Stealth AI - Div 2", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Industry|Retail", "label": "Industry: Retail", "shape": "ellipse", "title": "Entity"}, {"color": "#fd7e14", "font": {"color": "white"}, "id": "Policy|Retail|", "label": "Escalation: ", "shape": "box", "title": "Policy"}, {"color": "#ffc107", "font": {"color": "white"}, "id": "Decision|APPROVED|Policy|Retail|", "label": "Decision: APPROVED", "shape": "ellipse", "title": "Decision"}, {"color": "#28a745", "font": {"color": "white"}, "id": "Outcome|RENEWED|Decision|APPROVED|Policy|Retail|", "label": "Outcome: RENEWED", "shape": "ellipse", "title": "Outcome"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|RetailGiant - Div 3", "label": "Company: RetailGiant - Div 3", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|FinTrust Bank - Div 4", "label": "Company: FinTrust Bank - Div 4", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|NovaHealth - Div 5", "label": "Company: NovaHealth - Div 5", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|Stealth AI - Div 6", "label": "Company: Stealth AI - Div 6", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|RetailGiant - Div 7", "label": "Company: RetailGiant - Div 7", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|FinTrust Bank - Div 8", "label": "Company: FinTrust Bank - Div 8", "shape": "ellipse", "title": "Entity"}, {"color": "#dc3545", "font": {"color": "white"}, "id": "Outcome|CHURNED|Decision|REJECTED|Policy|Healthcare|Security Blocker: [\u0027GDPR Data Residency\u0027]", "label": "Outcome: CHURNED", "shape": "ellipse", "title": "Outcome"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|NovaHealth - Div 9", "label": "Company: NovaHealth - Div 9", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|Stealth AI - Div 10", "label": "Company: Stealth AI - Div 10", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|RetailGiant - Div 11", "label": "Company: RetailGiant - Div 11", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|FinTrust Bank - Div 12", "label": "Company: FinTrust Bank - Div 12", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|NovaHealth - Div 13", "label": "Company: NovaHealth - Div 13", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|Stealth AI - Div 14", "label": "Company: Stealth AI - Div 14", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|RetailGiant - Div 15", "label": "Company: RetailGiant - Div 15", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|FinTrust Bank - Div 16", "label": "Company: FinTrust Bank - Div 16", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|NovaHealth - Div 17", "label": "Company: NovaHealth - Div 17", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|Stealth AI - Div 18", "label": "Company: Stealth AI - Div 18", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|RetailGiant - Div 19", "label": "Company: RetailGiant - Div 19", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|FinTrust Bank - Div 20", "label": "Company: FinTrust Bank - Div 20", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|NovaHealth - Div 21", "label": "Company: NovaHealth - Div 21", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|Stealth AI - Div 22", "label": "Company: Stealth AI - Div 22", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|RetailGiant - Div 23", "label": "Company: RetailGiant - Div 23", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|FinTrust Bank - Div 24", "label": "Company: FinTrust Bank - Div 24", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|NovaHealth - Div 25", "label": "Company: NovaHealth - Div 25", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|Stealth AI - Div 26", "label": "Company: Stealth AI - Div 26", "shape": "ellipse", "title": "Entity"}, {"color": "#dc3545", "font": {"color": "white"}, "id": "Outcome|CHURNED|Decision|APPROVED|Policy|Retail|", "label": "Outcome: CHURNED", "shape": "ellipse", "title": "Outcome"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|RetailGiant - Div 27", "label": "Company: RetailGiant - Div 27", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|FinTrust Bank - Div 28", "label": "Company: FinTrust Bank - Div 28", "shape": "ellipse", "title": "Entity"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "Entity|Company|NovaHealth - Div 29", "label": "Company: NovaHealth - Div 29", "shape": "ellipse", "title": "Entity"}]);
-                  edges = new vis.DataSet([{"arrows": "to", "from": "Entity|Industry|Finance", "label": "", "title": "Weight: 1", "to": "Policy|Finance|Deal \u003e $250k (Strategic)", "value": 1}, {"arrows": "to", "from": "Policy|Finance|Deal \u003e $250k (Strategic)", "label": "8", "title": "Weight: 8", "to": "Decision|APPROVED|Policy|Finance|Deal \u003e $250k (Strategic)", "value": 8}, {"arrows": "to", "from": "Decision|APPROVED|Policy|Finance|Deal \u003e $250k (Strategic)", "label": "8", "title": "Weight: 8", "to": "Outcome|RENEWED|Decision|APPROVED|Policy|Finance|Deal \u003e $250k (Strategic)", "value": 8}, {"arrows": "to", "from": "Entity|Company|FinTrust Bank - Div 0", "label": "", "title": "Weight: 1", "to": "Outcome|RENEWED|Decision|APPROVED|Policy|Finance|Deal \u003e $250k (Strategic)", "value": 1}, {"arrows": "to", "from": "Entity|Industry|Healthcare", "label": "", "title": "Weight: 1", "to": "Policy|Healthcare|Security Blocker: [\u0027GDPR Data Residency\u0027]", "value": 1}, {"arrows": "to", "from": "Policy|Healthcare|Security Blocker: [\u0027GDPR Data Residency\u0027]", "label": "8", "title": "Weight: 8", "to": "Decision|REJECTED|Policy|Healthcare|Security Blocker: [\u0027GDPR Data Residency\u0027]", "value": 8}, {"arrows": "to", "from": "Decision|REJECTED|Policy|Healthcare|Security Blocker: [\u0027GDPR Data Residency\u0027]", "label": "6", "title": "Weight: 6", "to": "Outcome|RENEWED|Decision|REJECTED|Policy|Healthcare|Security Blocker: [\u0027GDPR Data Residency\u0027]", "value": 6}, {"arrows": "to", "from": "Decision|REJECTED|Policy|Healthcare|Security Blocker: [\u0027GDPR Data Residency\u0027]", "label": "2", "title": "Weight: 2", "to": "Outcome|CHURNED|Decision|REJECTED|Policy|Healthcare|Security Blocker: [\u0027GDPR Data Residency\u0027]", "value": 2}, {"arrows": "to", "from": "Entity|Company|NovaHealth - Div 1", "label": "", "title": "Weight: 1", "to": "Outcome|RENEWED|Decision|REJECTED|Policy|Healthcare|Security Blocker: [\u0027GDPR Data Residency\u0027]", "value": 1}, {"arrows": "to", "from": "Entity|Industry|Technology", "label": "", "title": "Weight: 1", "to": "Policy|Technology|", "value": 1}, {"arrows": "to", "from": "Policy|Technology|", "label": "7", "title": "Weight: 7", "to": "Decision|APPROVED|Policy|Technology|", "value": 7}, {"arrows": "to", "from": "Decision|APPROVED|Policy|Technology|", "label": "7", "title": "Weight: 7", "to": "Outcome|CHURNED|Decision|APPROVED|Policy|Technology|", "value": 7}, {"arrows": "to", "from": "Entity|Company|Stealth AI - Div 2", "label": "", "title": "Weight: 1", "to": "Outcome|CHURNED|Decision|APPROVED|Policy|Technology|", "value": 1}, {"arrows": "to", "from": "Entity|Industry|Retail", "label": "", "title": "Weight: 1", "to": "Policy|Retail|", "value": 1}, {"arrows": "to", "from": "Policy|Retail|", "label": "7", "title": "Weight: 7", "to": "Decision|APPROVED|Policy|Retail|", "value": 7}, {"arrows": "to", "from": "Decision|APPROVED|Policy|Retail|", "label": "6", "title": "Weight: 6", "to": "Outcome|RENEWED|Decision|APPROVED|Policy|Retail|", "value": 6}, {"arrows": "to", "from": "Decision|APPROVED|Policy|Retail|", "label": "", "title": "Weight: 1", "to": "Outcome|CHURNED|Decision|APPROVED|Policy|Retail|", "value": 1}, {"arrows": "to", "from": "Entity|Company|RetailGiant - Div 3", "label": "", "title": "Weight: 1", "to": "Outcome|RENEWED|Decision|APPROVED|Policy|Retail|", "value": 1}, {"arrows": "to", "from": "Entity|Company|FinTrust Bank - Div 4", "label": "", "title": "Weight: 1", "to": "Outcome|RENEWED|Decision|APPROVED|Policy|Finance|Deal \u003e $250k (Strategic)", "value": 1}, {"arrows": "to", "from": "Entity|Company|NovaHealth - Div 5", "label": "", "title": "Weight: 1", "to": "Outcome|RENEWED|Decision|REJECTED|Policy|Healthcare|Security Blocker: [\u0027GDPR Data Residency\u0027]", "value": 1}, {"arrows": "to", "from": "Entity|Company|Stealth AI - Div 6", "label": "", "title": "Weight: 1", "to": "Outcome|CHURNED|Decision|APPROVED|Policy|Technology|", "value": 1}, {"arrows": "to", "from": "Entity|Company|RetailGiant - Div 7", "label": "", "title": "Weight: 1", "to": "Outcome|RENEWED|Decision|APPROVED|Policy|Retail|", "value": 1}, {"arrows": "to", "from": "Entity|Company|FinTrust Bank - Div 8", "label": "", "title": "Weight: 1", "to": "Outcome|RENEWED|Decision|APPROVED|Policy|Finance|Deal \u003e $250k (Strategic)", "value": 1}, {"arrows": "to", "from": "Entity|Company|NovaHealth - Div 9", "label": "", "title": "Weight: 1", "to": "Outcome|CHURNED|Decision|REJECTED|Policy|Healthcare|Security Blocker: [\u0027GDPR Data Residency\u0027]", "value": 1}, {"arrows": "to", "from": "Entity|Company|Stealth AI - Div 10", "label": "", "title": "Weight: 1", "to": "Outcome|CHURNED|Decision|APPROVED|Policy|Technology|", "value": 1}, {"arrows": "to", "from": "Entity|Company|RetailGiant - Div 11", "label": "", "title": "Weight: 1", "to": "Outcome|RENEWED|Decision|APPROVED|Policy|Retail|", "value": 1}, {"arrows": "to", "from": "Entity|Company|FinTrust Bank - Div 12", "label": "", "title": "Weight: 1", "to": "Outcome|RENEWED|Decision|APPROVED|Policy|Finance|Deal \u003e $250k (Strategic)", "value": 1}, {"arrows": "to", "from": "Entity|Company|NovaHealth - Div 13", "label": "", "title": "Weight: 1", "to": "Outcome|RENEWED|Decision|REJECTED|Policy|Healthcare|Security Blocker: [\u0027GDPR Data Residency\u0027]", "value": 1}, {"arrows": "to", "from": "Entity|Company|Stealth AI - Div 14", "label": "", "title": "Weight: 1", "to": "Outcome|CHURNED|Decision|APPROVED|Policy|Technology|", "value": 1}, {"arrows": "to", "from": "Entity|Company|RetailGiant - Div 15", "label": "", "title": "Weight: 1", "to": "Outcome|RENEWED|Decision|APPROVED|Policy|Retail|", "value": 1}, {"arrows": "to", "from": "Entity|Company|FinTrust Bank - Div 16", "label": "", "title": "Weight: 1", "to": "Outcome|RENEWED|Decision|APPROVED|Policy|Finance|Deal \u003e $250k (Strategic)", "value": 1}, {"arrows": "to", "from": "Entity|Company|NovaHealth - Div 17", "label": "", "title": "Weight: 1", "to": "Outcome|CHURNED|Decision|REJECTED|Policy|Healthcare|Security Blocker: [\u0027GDPR Data Residency\u0027]", "value": 1}, {"arrows": "to", "from": "Entity|Company|Stealth AI - Div 18", "label": "", "title": "Weight: 1", "to": "Outcome|CHURNED|Decision|APPROVED|Policy|Technology|", "value": 1}, {"arrows": "to", "from": "Entity|Company|RetailGiant - Div 19", "label": "", "title": "Weight: 1", "to": "Outcome|RENEWED|Decision|APPROVED|Policy|Retail|", "value": 1}, {"arrows": "to", "from": "Entity|Company|FinTrust Bank - Div 20", "label": "", "title": "Weight: 1", "to": "Outcome|RENEWED|Decision|APPROVED|Policy|Finance|Deal \u003e $250k (Strategic)", "value": 1}, {"arrows": "to", "from": "Entity|Company|NovaHealth - Div 21", "label": "", "title": "Weight: 1", "to": "Outcome|RENEWED|Decision|REJECTED|Policy|Healthcare|Security Blocker: [\u0027GDPR Data Residency\u0027]", "value": 1}, {"arrows": "to", "from": "Entity|Company|Stealth AI - Div 22", "label": "", "title": "Weight: 1", "to": "Outcome|CHURNED|Decision|APPROVED|Policy|Technology|", "value": 1}, {"arrows": "to", "from": "Entity|Company|RetailGiant - Div 23", "label": "", "title": "Weight: 1", "to": "Outcome|RENEWED|Decision|APPROVED|Policy|Retail|", "value": 1}, {"arrows": "to", "from": "Entity|Company|FinTrust Bank - Div 24", "label": "", "title": "Weight: 1", "to": "Outcome|RENEWED|Decision|APPROVED|Policy|Finance|Deal \u003e $250k (Strategic)", "value": 1}, {"arrows": "to", "from": "Entity|Company|NovaHealth - Div 25", "label": "", "title": "Weight: 1", "to": "Outcome|RENEWED|Decision|REJECTED|Policy|Healthcare|Security Blocker: [\u0027GDPR Data Residency\u0027]", "value": 1}, {"arrows": "to", "from": "Entity|Company|Stealth AI - Div 26", "label": "", "title": "Weight: 1", "to": "Outcome|CHURNED|Decision|APPROVED|Policy|Technology|", "value": 1}, {"arrows": "to", "from": "Entity|Company|RetailGiant - Div 27", "label": "", "title": "Weight: 1", "to": "Outcome|CHURNED|Decision|APPROVED|Policy|Retail|", "value": 1}, {"arrows": "to", "from": "Entity|Company|FinTrust Bank - Div 28", "label": "", "title": "Weight: 1", "to": "Outcome|RENEWED|Decision|APPROVED|Policy|Finance|Deal \u003e $250k (Strategic)", "value": 1}, {"arrows": "to", "from": "Entity|Company|NovaHealth - Div 29", "label": "", "title": "Weight: 1", "to": "Outcome|RENEWED|Decision|REJECTED|Policy|Healthcare|Security Blocker: [\u0027GDPR Data Residency\u0027]", "value": 1}]);
+        simulation.on("tick", () => {
+            link.attr("x1", d => d.source.x).attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+            node.attr("cx", d => d.x).attr("cy", d => d.y);
+            label.attr("x", d => d.x).attr("y", d => d.y);
+        });
 
-                  nodeColors = {};
-                  allNodes = nodes.get({ returnType: "Object" });
-                  for (nodeId in allNodes) {
-                    nodeColors[nodeId] = allNodes[nodeId].color;
-                  }
-                  allEdges = edges.get({ returnType: "Object" });
-                  // adding nodes and edges to the graph
-                  data = {nodes: nodes, edges: edges};
-
-                  var options = {
-    "configure": {
-        "enabled": false
-    },
-    "edges": {
-        "color": {
-            "inherit": true
-        },
-        "smooth": {
-            "enabled": true,
-            "type": "dynamic"
+        function dragstarted(event) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            event.subject.fx = event.subject.x;
+            event.subject.fy = event.subject.y;
         }
-    },
-    "interaction": {
-        "dragNodes": true,
-        "hideEdgesOnDrag": false,
-        "hideNodesOnDrag": false
-    },
-    "physics": {
-        "enabled": true,
-        "stabilization": {
-            "enabled": true,
-            "fit": true,
-            "iterations": 1000,
-            "onlyDynamicEdges": false,
-            "updateInterval": 50
+        function dragged(event) {
+            event.subject.fx = event.x;
+            event.subject.fy = event.y;
         }
-    }
-};
+        function dragended(event) {
+            if (!event.active) simulation.alphaTarget(0);
+            event.subject.fx = null;
+            event.subject.fy = null;
+        }
 
-                  
+        function zoomIn() { svg.transition().call(zoom.scaleBy, 1.3); }
+        function zoomOut() { svg.transition().call(zoom.scaleBy, 0.7); }
+        function resetZoom() { svg.transition().call(zoom.transform, d3.zoomIdentity); }
 
-
-                  
-
-                  network = new vis.Network(container, data, options);
-
-                  
-
-                  
-
-                  
-
-
-                  
-
-                  return network;
-
-              }
-              drawGraph();
-        </script>
-    </body>
+        function showDetails(d) {
+            const card = document.getElementById("detail-card");
+            card.style.display = "block";
+            document.getElementById("card-title").innerText = d.label;
+            document.getElementById("card-body").innerHTML = `
+                <div><strong>Category:</strong> ${d.group}</div>
+                <div style="margin-top: 4px;"><strong>Node ID:</strong> <span style="font-family: monospace;">${d.id}</span></div>
+                <div style="margin-top: 6px; font-size: 11px; color: #475569;">Learned graph memory node connected across ${data.edges.filter(e => e.source.id === d.id || e.target.id === d.id).length} operational paths.</div>
+            `;
+        }
+    </script>
+</body>
 </html>

@@ -1,0 +1,59 @@
+{
+  "vertical": "banking",
+  "industry_name": "Commercial & Digital Banking",
+  "regulations": [
+    {
+      "framework": "SOX Section 404",
+      "mandatory": true,
+      "audit_scope": "Financial reporting audit logs"
+    },
+    {
+      "framework": "AML / KYC Compliance",
+      "mandatory": true,
+      "audit_scope": "Anti-money laundering sanction screening"
+    },
+    {
+      "framework": "GLBA",
+      "mandatory": true,
+      "audit_scope": "Gramm-Leach-Bliley nonpublic personal information"
+    },
+    {
+      "framework": "SOC2 Type II",
+      "mandatory": true,
+      "audit_scope": "Annual third-party audit"
+    }
+  ],
+  "supported_features": [
+    {
+      "name": "Core Banking REST Gateway",
+      "status": "GA",
+      "eta": "Live"
+    },
+    {
+      "name": "HSM Dedicated Key Vault",
+      "status": "GA",
+      "eta": "Live"
+    },
+    {
+      "name": "Immutable Audit Trail",
+      "status": "GA",
+      "eta": "Live"
+    },
+    {
+      "name": "COBOL Mainframe SNA Gateway",
+      "status": "Unsupported",
+      "eta": "N/A",
+      "warning": "Mainframe requires legacy partner bridge"
+    }
+  ],
+  "pricing_tiers": {
+    "standard_rate_per_branch": 8500,
+    "enterprise_financial_license": 120000,
+    "target_acv_floor": 75000
+  },
+  "historical_churn_indicators": [
+    "Requirement for mainframe direct socket connection without middleware",
+    "Failure to provide daily cryptographic ledger attestations",
+    "Past loss: Failed SOX audit log extraction in 2024"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "vertical": "retail",
+  "industry_name": "Retail & E-Commerce",
+  "regulations": [
+    {
+      "framework": "PCI-DSS v4",
+      "mandatory": true,
+      "audit_scope": "Point of sale terminals and checkout gateways"
+    },
+    {
+      "framework": "SOC2 Type II",
+      "mandatory": true,
+      "audit_scope": "Customer order data protection"
+    },
+    {
+      "framework": "GDPR",
+      "mandatory": false,
+      "notes": "Required if shipping to European consumers"
+    }
+  ],
+  "supported_features": [
+    {
+      "name": "Omnichannel Inventory API",
+      "status": "GA",
+      "eta": "Live"
+    },
+    {
+      "name": "Shopify Plus / Salesforce Commerce Cloud Sync",
+      "status": "GA",
+      "eta": "Live"
+    },
+    {
+      "name": "Real-Time POS Failover",
+      "status": "GA",
+      "eta": "Live"
+    },
+    {
+      "name": "Offline Local Cash Register Support",
+      "status": "Roadmap",
+      "eta": "Q4 2026",
+      "warning": "Requires edge container daemon"
+    }
+  ],
+  "pricing_tiers": {
+    "standard_rate_per_store": 1800,
+    "enterprise_omnichannel_fee": 40000,
+    "target_acv_floor": 30000
+  },
+  "historical_churn_indicators": [
+    "Sub-10ms checkout SLA requirements on peak Black Friday traffic",
+    "Uncertified proprietary magnetic stripe reader hardware",
+    "Past loss: POS gateway timeout during holiday flash sale"
+  ]
+}

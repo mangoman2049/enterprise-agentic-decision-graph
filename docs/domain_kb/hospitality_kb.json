@@ -1,0 +1,54 @@
+{
+  "vertical": "hospitality",
+  "industry_name": "Hospitality & Resort Management",
+  "regulations": [
+    {
+      "framework": "PCI-DSS v4",
+      "mandatory": true,
+      "audit_scope": "Payment card data across booking engines & POS"
+    },
+    {
+      "framework": "GDPR",
+      "mandatory": true,
+      "notes": "EU guest booking data residency"
+    },
+    {
+      "framework": "CCPA",
+      "mandatory": true,
+      "notes": "California guest privacy"
+    }
+  ],
+  "supported_features": [
+    {
+      "name": "Opera / PMS Two-Way Sync",
+      "status": "GA",
+      "eta": "Live"
+    },
+    {
+      "name": "Multi-Property Central Billing",
+      "status": "GA",
+      "eta": "Live"
+    },
+    {
+      "name": "Guest Loyalty API",
+      "status": "GA",
+      "eta": "Live"
+    },
+    {
+      "name": "Legacy Serial Kiosk Drivers",
+      "status": "Roadmap",
+      "eta": "Q1 2027",
+      "warning": "Requires custom edge bridge"
+    }
+  ],
+  "pricing_tiers": {
+    "standard_rate_per_property": 4500,
+    "enterprise_franchise_fee": 35000,
+    "target_acv_floor": 20000
+  },
+  "historical_churn_indicators": [
+    "Franchisee multi-tenant split billing conflicts",
+    "Uncertified third-party PMS booking engine integrations",
+    "Past loss: 2025 PMS sync data loss in resort chain"
+  ]
+}

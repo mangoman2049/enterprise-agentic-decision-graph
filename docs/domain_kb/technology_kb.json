@@ -1,0 +1,54 @@
+{
+  "vertical": "technology",
+  "industry_name": "Enterprise Cloud & Software",
+  "regulations": [
+    {
+      "framework": "SOC2 Type II",
+      "mandatory": true,
+      "audit_scope": "Security, Confidentiality, Availability"
+    },
+    {
+      "framework": "FedRAMP Moderate",
+      "mandatory": false,
+      "notes": "Required only for US federal/defense contracts"
+    },
+    {
+      "framework": "GDPR",
+      "mandatory": true,
+      "notes": "Mandatory for EU customer data processing"
+    }
+  ],
+  "supported_features": [
+    {
+      "name": "Multi-Tenant Cloud SaaS",
+      "status": "GA",
+      "eta": "Live"
+    },
+    {
+      "name": "OAuth2 / SAML SSO",
+      "status": "GA",
+      "eta": "Live"
+    },
+    {
+      "name": "REST API Webhooks",
+      "status": "GA",
+      "eta": "Live"
+    },
+    {
+      "name": "Air-Gapped On-Premises Deployment",
+      "status": "Roadmap",
+      "eta": "Q4 2026",
+      "warning": "On-prem requires DVP architectural review"
+    }
+  ],
+  "pricing_tiers": {
+    "standard_rate_per_seat": 1200,
+    "enterprise_platform_fee": 50000,
+    "target_acv_floor": 25000
+  },
+  "historical_churn_indicators": [
+    "Strict requirement for air-gapped VPC without public egress",
+    "Request for custom C++ SDK without REST bindings",
+    "Past loss: Legacy on-prem migration disputes in 2024"
+  ]
+}

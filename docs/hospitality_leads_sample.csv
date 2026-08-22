@@ -1,0 +1,7 @@
+lead_id,company,industry,annual_revenue_usd,employee_count,urgency,pain_points,compliance_needs,requested_tier
+HOSP-101,Grand Resort & Spa Group,Hospitality,45000000,1200,High,Guest WiFi Authentication;PMS Integration;GDPR Data Retention,GDPR,Enterprise
+HOSP-102,Marriott Franchise Regional,Hospitality,85000000,2400,High,Multi-Property Billing;Loyalty Program Sync;SOC2 Audit,SOC2,Enterprise
+HOSP-103,Boutique Stay Collection,Hospitality,12000000,350,Medium,Contactless Check-In;Housekeeping Automation,SOC2,Mid-Market
+HOSP-104,Alpine Ski Lodge Operations,Hospitality,8500000,180,High,Seasonal Staff Onboarding;PCI-DSS Payment Gateway,PCI-DSS,Mid-Market
+HOSP-105,Oceanfront Luxury Suites,Hospitality,28000000,650,High,VIP Concierge AI;GDPR Guest Consent;Fast Check-Out,GDPR,Enterprise
+HOSP-106,SunValley Inn Chain,Hospitality,5200000,95,Low,Basic Booking Portal;POS Integration,SOC2,Growth
