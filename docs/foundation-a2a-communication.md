@@ -40,7 +40,7 @@ Processing: **FinTrust Bank (Finance, $500K budget)**
 | 7 | Orchestrator | [Product Fit ∥ Security ∥ Commercial] | Parallel fan-out: Full enriched lead context | 3 × 420 bytes | A2A |
 | 8 | [Product Fit + Security + Commercial] | HITL Gate | Aggregated: {fit: 'Strong', security: 'Pass', arr: $470K} | 380 bytes | A2A |
 
-**Key observation**: Steps 3-4 cross the A2A/MCP boundary — the Research Agent makes an A2A-to-MCP call to the CRM server.
+**Key observation**: Steps 3-4 cross the A2A/MCP boundary :  the Research Agent makes an A2A-to-MCP call to the CRM server.
 
 ## Parallel Fan-Out Pattern
 
@@ -58,5 +58,5 @@ product_res, security_res, commercial_res = await asyncio.gather(
 This reduces wall-clock time from ~600ms (sequential) to ~200ms (parallel).
 
 ## Code Reference
-- `agents/base_agent.py` — Agent card definition and A2A wrapper
-- `orchestrator/workflow_engine.py` — Orchestrator message routing
+- `agents/base_agent.py` :  Agent card definition and A2A wrapper
+- `orchestrator/workflow_engine.py` :  Orchestrator message routing

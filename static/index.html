@@ -585,7 +585,7 @@
                         <div class="flow-arrow" style="margin:0 4px;"></div>
                         <div class="flow-node amber" style="padding: 6px; font-size: 11px;">HITL</div>
                     </div>
-                    <div class="nugget">Why 7 agents instead of 1 with 7 tools? Modularity enables independent evals, scaling, and failure isolation per AGENTS.md Rule 4.</div>
+                    <div class="nugget">Why use 7 specialized agents? Modular decomposition enables independent evaluations, isolated scaling, and component fault containment (AGENTS.md Rule 4).</div>
                 </div>
 
                 <!-- F2 -->
@@ -604,7 +604,7 @@
                     </div>
                     <button class="btn-primary" onclick="runStep('f2', '/api/foundation/mcp')">Run F2 Trace</button>
                     <div id="res-f2" class="step-result-container" style="display:none"></div>
-                    <div class="nugget">FastMCP uses stdio transport: each tool server runs as a subprocess. Switching from Salesforce to HubSpot requires updating only the CRM MCP Server, not a single agent prompt.</div>
+                    <div class="nugget">FastMCP uses stdio transport with tool servers running as subprocesses. Switching CRM providers requires updating only the CRM MCP Server without modifying agent prompts.</div>
                 </div>
 
                 <!-- F3 -->
@@ -623,7 +623,7 @@
                     </div>
                     <button class="btn-primary" onclick="runStep('f3', '/api/foundation/a2a')">Run F3 Trace</button>
                     <div id="res-f3" class="step-result-container" style="display:none"></div>
-                    <div class="nugget">A2A messages carry typed payloads. The orchestrator never passes raw strings: structured contracts prevent hallucination leakage between agents.</div>
+                    <div class="nugget">A2A messages carry typed JSON payloads. Structured schema contracts prevent context distortion across agent boundaries.</div>
                 </div>
 
                 <!-- F4 -->
@@ -677,7 +677,7 @@
                     <button class="btn-primary" onclick="runStep('e1', '/api/evals/contract')">Run E1 Trace</button>
                     <div id="res-e1" class="step-result-container" style="display:none"></div>
                     <div id="viz-e1" class="grid-4" style="display:none; margin: 16px 0;"></div>
-                    <div class="nugget">An eval contract is the source of truth: it defines what 'good' means BEFORE you run any test. Without it, you're just hoping the system works.</div>
+                    <div class="nugget">An evaluation contract establishes explicit quality and governance thresholds before test execution to measure production readiness deterministically.</div>
                 </div>
 
                 <!-- E2 -->
@@ -697,14 +697,14 @@
                     <button class="btn-primary" onclick="runStep('e2', '/api/evals/golden')">Run E2 Trace</button>
                     <div id="res-e2" class="step-result-container" style="display:none"></div>
                     <div id="viz-e2" style="display:none; margin: 16px 0;"></div>
-                    <div class="nugget">Golden datasets are immutable. If a test fails, you fix the system, not the test data. Adding new edge cases is how you harden the system.</div>
+                    <div class="nugget">Golden datasets remain immutable across test runs. When benchmark evaluations fail, engineers update agent logic and append edge cases to harden coverage.</div>
                 </div>
 
                 <!-- E3 -->
                 <div class="lab-step">
                     <div class="concept-box">
                         <h5>CONCEPT: Component Evals</h5>
-                        <p>Component evals isolate individual agents and test them independently. If the pipeline fails, component evals tell you exactly which agent is responsible: not just that 'something broke.'</p>
+                        <p>Component evaluations isolate individual agents to pinpoint the exact module responsible for a pipeline failure.</p>
                     </div>
                     <div class="lookout-box">
                         <h5>What to Look For</h5>
@@ -825,7 +825,7 @@
                     <div id="res-g3" class="step-result-container" style="display: none; margin-top: 12px;"></div>
                     <div id="compliance-content" style="margin-top: 12px;"><div style="color: var(--text-muted); padding: 12px 0;">Loading regulatory compliance matrix...</div></div>
                     <div style="margin-top: 14px; background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 6px; padding: 10px 14px; font-size: 12px; color: #14532D;">
-                        <strong>🎓 The Read on Compliance Routing:</strong> Rather than wasting compute checking 10 frameworks simultaneously, the Security MCP dynamically queries only the frameworks relevant to the prospect's industry (e.g. SOX 404 & GLBA for Banking, GDPR & PCI-DSS for Hospitality & Retail).
+                        <strong>🎓 The Read on Compliance Routing:</strong> The Security MCP dynamically queries only the regulatory frameworks relevant to the prospect's industry (e.g. SOX 404 & GLBA for Banking, GDPR & PCI-DSS for Hospitality & Retail).
                     </div>
                 </div>
 
@@ -913,7 +913,7 @@
                         <div style="color: var(--text-muted); padding: 12px 0;">Loading LiteLLM execution spans...</div>
                     </div>
                     <div style="margin-top: 12px; background: #F8FAFC; border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; font-size: 12px; color: var(--text-muted);">
-                        <strong>🎓 The Read on Resilient Failover & "Out of Office" Handling:</strong> Real-world APIs occasionally experience rate limits or network drops. Instead of crashing the enterprise revenue workflow, NOTCRM logs the drop as an "Out of Office / No-Show" event and immediately routes to a backup in-memory cache agent to preserve DAG SLAs.
+                        <strong>🎓 The Read on Resilient Failover:</strong> When upstream model APIs encounter rate limits or network latency, NOTCRM captures the exception as a failover event and routes execution to a backup cache agent to maintain DAG SLAs.
                     </div>
                 </div>
 
@@ -928,11 +928,11 @@
                 <div class="card" style="background: var(--canvas); border-color: var(--border); font-size: 12px; color: var(--text-muted); margin-bottom: 24px;">
                     <strong style="color: var(--text-main); font-size: 13px;">* Consumption & Token Cost Accounting Model:</strong>
                     <ul style="margin: 8px 0 0 16px; line-height: 1.7;">
-                        <li><strong>Gemini 1.5 Flash:</strong> \$0.075 / 1M input tokens, \$0.30 / 1M output tokens (Balanced Enterprise standard).</li>
-                        <li><strong>GPT-4o-Mini:</strong> \$0.15 / 1M input tokens, \$0.60 / 1M output tokens (High-Velocity candidate tier).</li>
-                        <li><strong>Gemini 1.5 Pro / Claude 3.5 Sonnet:</strong> \$1.25 - \$3.00 / 1M input tokens, \$5.00 - \$15.00 / 1M output tokens (Meticulous Deep Auditor).</li>
-                        <li><strong>Outcome Value-Sharing:</strong> +\$0.50 credited for verified auto-approvals, +\$0.25 for correct auto-rejections.</li>
-                        <li><strong>HITL Escalation:</strong> \$2.00 per human DVP review; -\$5.00 penalty for policy violations caught by Independent Verifier.</li>
+                        <li><strong>Gemini 1.5 Flash:</strong> $0.075 / 1M input tokens, $0.30 / 1M output tokens (Balanced Enterprise standard).</li>
+                        <li><strong>GPT-4o-Mini:</strong> $0.15 / 1M input tokens, $0.60 / 1M output tokens (High-Velocity candidate tier).</li>
+                        <li><strong>Gemini 1.5 Pro / Claude 3.5 Sonnet:</strong> $1.25 - $3.00 / 1M input tokens, $5.00 - $15.00 / 1M output tokens (Meticulous Deep Auditor).</li>
+                        <li><strong>Outcome Value-Sharing:</strong> +$0.50 credited for verified auto-approvals, +$0.25 for correct auto-rejections.</li>
+                        <li><strong>HITL Escalation:</strong> $2.00 per human DVP review; -$5.00 penalty for policy violations caught by Independent Verifier.</li>
                     </ul>
                 </div>
 
@@ -968,7 +968,7 @@
                     Project objective
                 </div>
                 <p style="font-size: 13px; line-height: 1.5; margin: 0; color: #334155;">
-                    NOTCRM is an interactive simulation demonstrating how multi-agent systems operate in production environments. Rather than routing all operations through a single prompt, this system demonstrates how specialized agents collaborate across deterministic DAG pipelines, query tools via FastMCP, retain state through knowledge graphs, and enforce strict governance policies.
+                    NOTCRM demonstrates how multi-agent systems operate in production environments. Specialized agents collaborate across deterministic DAG pipelines, query tools via FastMCP, retain state through knowledge graphs, and enforce strict governance policies.
                 </p>
             </div>
 
@@ -1145,7 +1145,7 @@
                         <li><strong>Determinism Over Autonomy:</strong> Remove obsolete backwards-compatible paths in favor of explicit determinism.</li>
                         <li><strong>Simplicity & Directness:</strong> Choose the simplest implementation meeting architectural requirements.</li>
                         <li><strong>Layered Growth:</strong> Build in verified vertical layers; never trade a working product for unfinished complexity.</li>
-                        <li><strong>Modular Separation of Concerns:</strong> 7 specialized decomposed agents rather than 1 monolithic prompt.</li>
+                        <li><strong>Modular Separation of Concerns:</strong> 7 specialized decomposed agents with discrete operational boundaries.</li>
                         <li><strong>Standardized Tool Interfaces:</strong> FastMCP stdio servers decoupling agents from external data stores.</li>
                         <li><strong>Deterministic Verification Ahead of Consensus:</strong> Claim → Evidence → Freshness → Policy verification.</li>
                         <li><strong>Continuous Observability:</strong> Structured LiteLLM telemetry tracking latency, tokens, and workplace performance.</li>
@@ -1547,7 +1547,7 @@
                 } else if (parseFloat(cost) <= 0.14 && parseFloat(avgAcc) >= 95.0) {
                     coachName = "Billy Beane (Moneyball ROI Optimizer)";
                     coachBadge = "Moneyball ROI";
-                    coachQuote = '"We are not buying expensive agents; we are buying qualified pipeline at the lowest cost per closed ARR dollar."';
+                    coachQuote = '"We buy qualified pipeline at the lowest unit cost per closed ARR dollar."';
                     coachStrength = "✓ Exceptional 3400x pipeline ROI multiplier";
                     coachVuln = "▲ Moderate review queue on nuanced deals";
                     arch = "Billy Beane Moneyball";
@@ -2379,7 +2379,8 @@
         }
 
         function loadGraph() {
-            document.getElementById('kg-placeholder').style.display = 'none';
+            const placeholder = document.getElementById('kg-placeholder');
+            if (placeholder) placeholder.style.display = 'none';
             const container = document.getElementById('kg-iframe');
             container.style.display = 'block';
             container.innerHTML = `<iframe src="/api/graph" style="width:100%;height:100%;border:none;" title="Knowledge Graph"></iframe>`;

@@ -1,5 +1,5 @@
 """
-AetherScale CRM — Abstract Base Agent Architecture
+NOTCRM: Abstract Base Agent Architecture
 
 Architectural Principles (AGENTS.md):
 - Keep components modular and concerns clearly separated (Rule 4).
@@ -10,11 +10,11 @@ from typing import Dict, Any
 from opentelemetry import trace
 from opentelemetry.trace import Status, StatusCode
 
-tracer = trace.get_tracer("aetherscale.agents")
+tracer = trace.get_tracer("notcrm.agents")
 
 class BaseAgent:
     """
-    Abstract Base Class for all specialized domain agents in AetherScale CRM.
+    Abstract Base Class for all specialized domain agents in NOTCRM.
     Enforces A2A 2.0 Agent Card specifications and OpenTelemetry tracing contracts.
     """
     def __init__(self, name: str, role: str) -> None:

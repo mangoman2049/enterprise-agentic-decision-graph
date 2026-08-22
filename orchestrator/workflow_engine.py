@@ -1,5 +1,5 @@
 """
-AetherScale CRM — Multi-Agent DAG Workflow Engine
+NOTCRM: Multi-Agent DAG Workflow Engine
 
 Architectural Principles (AGENTS.md):
 - Keep components modular and concerns clearly separated (Rule 4).
@@ -19,7 +19,7 @@ from agents.security import SecurityAgent
 from agents.commercial import CommercialAgent
 from hitl.human_approval import HumanApprovalAgent
 
-tracer = trace.get_tracer("aetherscale.orchestrator")
+tracer = trace.get_tracer("notcrm.orchestrator")
 
 class WorkflowEngine:
     """

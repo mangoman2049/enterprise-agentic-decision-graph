@@ -297,9 +297,9 @@ Perform your domain evaluation adhering to your {archetype} profile and temperat
             "f1": {
                 "title": "Architectural Insight: Multi-Agent Specialization",
                 "analogy": "🏥 A Specialized Hospital Team vs. One Overworked Doctor",
-                "what_happened": "Instead of asking one giant monolithic AI to do everything, we split the workflow into 7 focused, specialized agents (Intake, Research, Qualification, Product Fit, Security, Commercial, HITL Gate).",
+                "what_happened": "The lead qualification workflow is decomposed into 7 specialized agents (Intake, Research, Qualification, Product Fit, Security, Commercial, HITL Gate), each with discrete operational boundaries.",
                 "what_to_notice": "Notice how each agent has its own discrete inputs, outputs, and tool boundaries. If the Security Agent makes a mistake, the Intake Agent is completely unaffected.",
-                "production_lesson": "In enterprise AI, monolithic single-prompt agents with 10+ tools quickly suffer from prompt bloat, hallucinated parameters, and impossible debugging. Multi-agent DAGs provide clean error isolation and allow you to swap models per role."
+                "production_lesson": "Modular multi-agent DAGs provide clean error isolation, independent scaling, and per-role model selection. Each agent can be evaluated, debugged, and swapped independently."
             },
             "f2": {
                 "title": "Architectural Insight: FastMCP Tool Decoupling",
@@ -313,21 +313,21 @@ Perform your domain evaluation adhering to your {archetype} profile and temperat
                 "analogy": "🛫 Flight Control Telemetry Logs",
                 "what_happened": "Every message passed between agents was stamped with a structured header (Sender, Receiver, Protocol a2a/2.0, Payload schema, Byte size).",
                 "what_to_notice": "Notice how easy it is to trace exactly what context was handed off from the Intake Agent to the Research Agent. There is zero hidden state.",
-                "production_lesson": "Without structured A2A protocols, multi-agent systems become an un-debuggable black box of chaotic chatter. Structured message traces give engineering teams total observability."
+                "production_lesson": "Structured A2A protocols give engineering teams full observability over inter-agent communication. Every handoff is traceable, auditable, and debuggable."
             },
             "f4": {
                 "title": "Architectural Insight: Knowledge Graph Memory",
                 "analogy": "🧠 Institutional Memory of Past Deal Outcomes",
                 "what_happened": "The system queried a historical Knowledge Graph network to check if this deal matches past accounts that churned due to unsupported on-prem requirements or missing certifications.",
                 "what_to_notice": "Notice how past deal outcomes (approved, rejected, churned) are connected as nodes and edges. When a new deal arrives, the graph automatically surfaces risk warnings.",
-                "production_lesson": "Unlike static IF-THEN rules that require humans to write code for every edge case, the Knowledge Graph learns patterns continuously from past operational outcomes."
+                "production_lesson": "The Knowledge Graph continuously learns risk patterns from historical deal outcomes, updating node relationships on every closed account."
             },
             "e1": {
                 "title": "Architectural Insight: The Evaluation Contract",
                 "analogy": "📋 Formal Quality & Safety Inspection Checklists",
                 "what_happened": "We evaluated the AI against a formal contract across 4 metric classes: Business Outcomes, Agent Quality, System Performance, and Governance.",
                 "what_to_notice": "Notice that each metric has an explicit numeric target (e.g. >=95% accuracy, <500ms latency) and a designated owner (DVP vs AI Engineering vs Governance).",
-                "production_lesson": "You cannot improve what you do not measure. An Eval Contract ensures Sales, Engineering, and Legal agree on what 'Production Ready' means before launching."
+                "production_lesson": "An eval contract ensures Sales, Engineering, and Legal agree on what 'Production Ready' means before launching. Explicit numeric targets prevent ambiguous quality standards."
             },
             "e2": {
                 "title": "Architectural Insight: Golden Dataset & Failure Taxonomies",
@@ -341,13 +341,13 @@ Perform your domain evaluation adhering to your {archetype} profile and temperat
                 "analogy": "🔍 Isolated Subsystem Unit Testing",
                 "what_happened": "We isolated each agent (Intake, CRM Research, Qualification, Product Fit, Security, Commercial) and graded their individual pass rates.",
                 "what_to_notice": "Notice how a single underperforming agent (like a loose Security parser) can be pinpointed instantly without guessing.",
-                "production_lesson": "End-to-end testing only tells you that the pipeline failed; Component Evals tell you exactly which engineer needs to fix which prompt."
+                "production_lesson": "Component evaluations isolate individual agent modules to pinpoint exact failure points in prompts or tool definitions."
             },
             "e4": {
                 "title": "Architectural Insight: Trajectory Scorecard",
                 "analogy": "🚖 Execution Path Efficiency & Sequence Correctness",
                 "what_happened": "We graded the step efficiency and tool execution sequence of the agents, penalizing unnecessary or redundant tool calls.",
-                "what_to_notice": "Notice that getting the right answer isn't enough: if an agent called 5 unnecessary tools and wasted compute, its trajectory score drops.",
+                "what_to_notice": "Notice that a correct final answer is insufficient: an agent calling 5 unnecessary tools wastes compute and incurs trajectory score penalties.",
                 "production_lesson": "Process quality is as vital as outcome quality. Efficient trajectories mean lower latency, lower API bills, and fewer failure points."
             },
             "e5": {
@@ -376,7 +376,7 @@ Perform your domain evaluation adhering to your {archetype} profile and temperat
                 "analogy": "🕵️ Automated Adversarial Exploit Testing",
                 "what_happened": "We fired 5 sophisticated attack payloads (Prompt injections, SQL escaping, Privilege escalations, Authority overrides) directly at the agent harness.",
                 "what_to_notice": "Notice that 0 attacks bypassed the defenses: malicious instructions hidden in lead notes were intercepted and neutralized.",
-                "production_lesson": "If you don't red-team your agents, your users will. Automated adversarial testing is essential for enterprise security compliance."
+                "production_lesson": "Automated adversarial red-teaming identifies injection vulnerabilities and prompt escapes prior to production deployment."
             },
             "g3": {
                 "title": "Architectural Insight: Regulatory Compliance Matrix",
@@ -392,7 +392,7 @@ Perform your domain evaluation adhering to your {archetype} profile and temperat
             "analogy": "💡 Practical Engineering Principle",
             "what_happened": "The system executed a verified pipeline inspection step.",
             "what_to_notice": "Observe the separation of concerns and deterministic outputs.",
-            "production_lesson": "Systematic verification is the bedrock of production agent architectures."
+            "production_lesson": "Systematic verification enforces quality, latency, and security thresholds across multi-agent pipelines."
         })
 
 

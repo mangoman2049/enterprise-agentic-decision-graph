@@ -31,17 +31,17 @@ In enterprise AI systems, a **single monolithic agent** with multiple tools crea
 Intake → Research → Qualification → [Product Fit ∥ Security ∥ Commercial] → HITL Gate
 ```
 
-The `∥` symbol indicates **parallel execution** — these agents run simultaneously using `asyncio.gather()`.
+The `∥` symbol indicates **parallel execution** :  these agents run simultaneously using `asyncio.gather()`.
 
 ## Key Design Decisions
 
 ### Why run Product Fit, Security, and Commercial in parallel?
-These three evaluations are independent — none depends on the other's output. Running them with `asyncio.gather()` cuts latency by ~66% compared to sequential execution.
+These three evaluations are independent :  none depends on the other's output. Running them with `asyncio.gather()` cuts latency by ~66% compared to sequential execution.
 
 ### What happens if Qualification disqualifies a lead?
 The orchestrator **short-circuits** immediately. Product Fit, Security, and Commercial are never invoked, saving compute cost and latency. This is called "early exit" or "fail-fast" routing.
 
 ## Code Reference
-- `orchestrator/workflow_engine.py` — The main DAG orchestrator
-- `agents/base_agent.py` — Base class with OpenTelemetry tracing
-- `agents/*.py` — Individual agent implementations
+- `orchestrator/workflow_engine.py` :  The main DAG orchestrator
+- `agents/base_agent.py` :  Base class with OpenTelemetry tracing
+- `agents/*.py` :  Individual agent implementations

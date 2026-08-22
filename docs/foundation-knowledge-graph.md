@@ -69,6 +69,6 @@ The HITL Gate queries the graph when:
 **Yes!** This is exactly why we need the **Independent Verifier** (Week 1, Step 5). The graph learns from historical data which may be **biased or outdated**. The Verifier adds a deterministic safety net that checks freshness and evidence quality before trusting graph-derived recommendations.
 
 ## Code Reference
-- `knowledge_graph/knowledge_graph.py` — NetworkX graph implementation
-- `hitl/human_approval.py` — HITL Gate with graph querying
-- `enterprise_brain.html` — Interactive D3.js graph visualization
+- `knowledge_graph/knowledge_graph.py` :  NetworkX graph implementation
+- `hitl/human_approval.py` :  HITL Gate with graph querying
+- `enterprise_brain.html` :  Interactive D3.js graph visualization

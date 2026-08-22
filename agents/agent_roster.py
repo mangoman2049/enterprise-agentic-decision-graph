@@ -425,16 +425,18 @@ ROLES_CATALOG: List[Dict[str, Any]] = [
 ]
 
 
+_CANDIDATES_FLAT_CACHE: Dict[str, Dict[str, Any]] = {}
+for _role in ROLES_CATALOG:
+    for _c in _role["candidates"]:
+        _entry = _c.copy()
+        _entry["role_id"] = _role["role_id"]
+        _entry["role_name"] = _role["role_name"]
+        _CANDIDATES_FLAT_CACHE[_c["id"]] = _entry
+
+
 def get_all_candidates_flat() -> Dict[str, Dict[str, Any]]:
-    """Returns flat dictionary of candidate_id -> candidate_data."""
-    flat = {}
-    for role in ROLES_CATALOG:
-        for c in role["candidates"]:
-            entry = c.copy()
-            entry["role_id"] = role["role_id"]
-            entry["role_name"] = role["role_name"]
-            flat[c["id"]] = entry
-    return flat
+    """Returns flat dictionary of candidate_id -> candidate_data (pre-computed)."""
+    return _CANDIDATES_FLAT_CACHE
 
 
 def calculate_fleet_metrics(selected_candidates: Dict[str, str]) -> Dict[str, Any]:
@@ -497,7 +499,7 @@ def calculate_fleet_metrics(selected_candidates: Dict[str, str]) -> Dict[str, An
         coach = {
             "name": "Billy Beane",
             "title": "Moneyball Data-Driven ROI Optimizer",
-            "quote": "We're not buying expensive agents; we're buying qualified pipeline at the lowest possible cost per closed ARR dollar.",
+            "quote": "We buy qualified pipeline at the lowest unit cost per closed ARR dollar.",
             "style_badge": "var(--indigo)",
             "philosophy": "Ruthlessly exploits token pricing efficiencies. Pairs fast parsers with targeted MCP verification to maximize pipeline ROI.",
             "key_strength": "Exceptional 3400x pipeline ROI multiplier & balanced unit economics",
@@ -557,30 +559,30 @@ def calculate_fleet_metrics(selected_candidates: Dict[str, str]) -> Dict[str, An
     # DVP Operational Risk & Strategic Upside Tradeoff Narrative
     if is_over_budget:
         fud_fomo = {
-            "headline": "⚠️ BUDGET DEFICIT ALERT — CFO Review Escalation",
+            "headline": "⚠️ BUDGET DEFICIT ALERT: CFO Review Escalation",
             "tradeoff_type": "OVER_BUDGET",
             "fud": f"At ${cost:.2f}/deal (${proj_compute_cost:,.0f} per 1K leads), you are exceeding your $1.00/deal compute allowance by ${(cost - budget_limit):.2f}. CFO may freeze token quota unless verified pipeline ROI exceeds 3000x.",
             "fomo": "You have assembled an ultra-meticulous fleet with near-zero hallucination. Passing on this precision risks legal non-compliance on enterprise SOC2/SOX accounts."
         }
     elif "klopp" in archetype.lower() or "aggressive" in archetype.lower():
         fud_fomo = {
-            "headline": "⚡ HIGH-VELOCITY FLEET — Rapid Scale vs. Hallucination Risk",
+            "headline": "⚡ HIGH-VELOCITY FLEET: Rapid Scale vs. Hallucination Risk",
             "tradeoff_type": "HIGH_VELOCITY",
             "fud": f"Cheap compute (${proj_compute_cost:,.0f}/1K leads), but an estimated ${proj_hallucination_liability:,.0f} in ungrounded deal liability. Loose parsing may pass bankrupt firms or uncertified on-prem requests.",
             "fomo": f"Lightning-fast throughput (120ms P95 latency) qualifies {proj_qualified_leads} leads ahead of competitors before quarterly budget locks."
         }
     elif "beane" in archetype.lower() or "moneyball" in archetype.lower():
         fud_fomo = {
-            "headline": "📈 UNIT ECONOMIC EFFICIENCY — Optimal Multiplier",
+            "headline": "📈 UNIT ECONOMIC EFFICIENCY: Optimal Multiplier",
             "tradeoff_type": "MONEYBALL",
             "fud": f"Saves ${(budget_remaining * 1000):,.0f} per 1K leads, but requires ~{proj_dvp_review_hours} hours of human DVP escalation oversight on nuanced contract terms.",
             "fomo": f"Unlocks ${proj_unlocked_arr:,.0f} in pipeline at an exceptional 3400x ROI multiplier. Peak efficiency for growth-stage revenue teams."
         }
     else:
         fud_fomo = {
-            "headline": "🛡️ BALANCED ENTERPRISE — Predictable Execution",
+            "headline": "🛡️ BALANCED ENTERPRISE: Predictable Execution",
             "tradeoff_type": "BALANCED",
-            "fud": "Standard SLAs mean you neither lead in raw speed nor total cost optimization, but maintain reliable predictability.",
+            "fud": "Standard SLAs maintain balanced throughput and compute cost with reliable predictability.",
             "fomo": f"Steady compliance across all 4 verticals with proven 97.2% governance and minimal human escalation fatigue ({proj_dvp_review_hours}h / 1K leads)."
         }
         

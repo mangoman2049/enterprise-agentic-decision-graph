@@ -2,7 +2,13 @@ import os
 import json
 import networkx as nx
 
-def export_interactive_graph():
+_CACHED_GRAPH_HTML: str | None = None
+
+def get_interactive_graph_html(force_refresh: bool = False) -> str:
+    global _CACHED_GRAPH_HTML
+    if _CACHED_GRAPH_HTML is not None and not force_refresh:
+        return _CACHED_GRAPH_HTML
+        
     base_dir = os.path.dirname(__file__)
     
     from knowledge_graph.knowledge_graph import KnowledgeGraphEngine
@@ -197,11 +203,26 @@ def export_interactive_graph():
 </body>
 </html>"""
 
+    _CACHED_GRAPH_HTML = html_template
+    return html_template
+
+def export_interactive_graph() -> str:
+    html = get_interactive_graph_html()
+    base_dir = os.path.dirname(__file__)
     out_path = os.path.join(base_dir, "enterprise_brain.html")
-    with open(out_path, "w", encoding="utf-8") as f:
-        f.write(html_template)
-    print(f"[OK] Exported Modern D3 Interactive Knowledge Graph to: {out_path}")
+    try:
+        if not os.path.exists(out_path):
+            with open(out_path, "w", encoding="utf-8") as f:
+                f.write(html)
+    except Exception:
+        pass
+    return html
 
 if __name__ == "__main__":
-    export_interactive_graph()
+    html = get_interactive_graph_html()
+    base_dir = os.path.dirname(__file__)
+    out_path = os.path.join(base_dir, "enterprise_brain.html")
+    with open(out_path, "w", encoding="utf-8") as f:
+        f.write(html)
+    print(f"[OK] Exported Modern D3 Interactive Knowledge Graph to: {out_path}")
 

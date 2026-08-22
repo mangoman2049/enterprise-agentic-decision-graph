@@ -1,4 +1,4 @@
-# AGENTS.md — Engineering Principles for Agentic AI Architecture
+# AGENTS.md :  Engineering Principles for Agentic AI Architecture
 
 This document defines the core software engineering principles governing our enterprise agentic lead qualification system:
 

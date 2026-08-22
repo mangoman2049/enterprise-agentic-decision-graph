@@ -1,6 +1,6 @@
 # Day 4 Trajectory Scorecard: Process Quality & Unsafe Path Penalization
 
-Version: 1.0 (Week 1 — Evals & Verification)  
+Version: 1.0 (Week 1 :  Evals & Verification)  
 Focus: Evaluating how the agent system reached its decision (Process Quality), not merely checking the final output string.
 
 ---

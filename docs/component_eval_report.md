@@ -1,6 +1,6 @@
 # Day 3 Component Evaluation Report: Root-Cause Isolation
 
-Version: 1.0 (Week 1 — Evals & Verification)  
+Version: 1.0 (Week 1 :  Evals & Verification)  
 System Component Scope: Intake Router, CRM Retrieval, Product Fit, Security Compliance, Commercial Pricing, HITL Decision Engine  
 
 ---

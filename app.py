@@ -9,24 +9,28 @@ Architectural Principles (AGENTS.md):
 """
 
 import asyncio
+import csv
 import json
 import os
 import sys
+import time
+from collections import OrderedDict
 from datetime import datetime, timezone
 from pathlib import Path
 from contextlib import asynccontextmanager
 from typing import Dict, Any, List, Optional
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
 from pydantic import BaseModel, Field
 
 from fastmcp import Client
 from orchestrator.workflow_engine import WorkflowEngine
 from knowledge_graph.knowledge_graph import KnowledgeGraphEngine
 from agents.agent_roster import ROLES_CATALOG, get_all_candidates_flat, calculate_fleet_metrics
+from agents.llm_agent_runner import LLMAgentRunner
 
-# Week 1 Evaluation Suite Engines
+# Week 1 Evaluation Suite Engines (Singletons for 512MB RAM Efficiency)
 from evals.eval_contract import EvalContractEngine
 from evals.golden_dataset import load_golden_dataset
 from evals.component_evaluator import ComponentEvaluator
@@ -34,6 +38,18 @@ from evals.trajectory_evaluator import TrajectoryEvaluator
 from evals.independent_verifier import IndependentVerifier
 from evals.regression_harness import RegressionHarness
 import hitl.human_approval as hitl_module
+from export_graph import get_interactive_graph_html
+
+_BASE_DIR = os.path.dirname(__file__)
+_GOLDEN_DATA_PATH = os.path.join(_BASE_DIR, "data", "golden_dataset_v1.json")
+
+EVAL_CONTRACT_ENGINE = EvalContractEngine()
+COMPONENT_EVALUATOR = ComponentEvaluator(_GOLDEN_DATA_PATH)
+TRAJECTORY_EVALUATOR = TrajectoryEvaluator(_GOLDEN_DATA_PATH)
+INDEPENDENT_VERIFIER = IndependentVerifier()
+REGRESSION_HARNESS = RegressionHarness(_GOLDEN_DATA_PATH)
+LLM_RUNNER = LLMAgentRunner()
+GOLDEN_DATASET_CACHE = load_golden_dataset(_GOLDEN_DATA_PATH)
 
 # ─── GLOBAL SERVER INFRASTRUCTURE STATE ────────────────────────────────────────
 class GlobalServerState:
@@ -45,7 +61,10 @@ class GlobalServerState:
 
 global_state = GlobalServerState()
 
-# ─── MULTI-SESSION ISOLATED STATE STORE ───────────────────────────────────────
+# ─── MULTI-SESSION ISOLATED BOUNDED STORE (LRU / TTL) ───────────────────────────
+MAX_CONCURRENT_SESSIONS = 500  # Conservative quota for 512MB RAM ceiling on Render
+SESSION_TTL_SECONDS = 1800    # 30-minute inactivity expiration
+
 class SessionState:
     """
     Session-specific isolated state for multi-user concurrent isolation.
@@ -104,23 +123,93 @@ class SessionState:
             "penalties": 0.0
         }
 
-sessions: Dict[str, SessionState] = {}
+
+class BoundedSessionStore:
+    """Bounded LRU Session Store with automatic TTL expiry to prevent memory exhaustion."""
+    def __init__(self, max_size: int = MAX_CONCURRENT_SESSIONS, ttl: int = SESSION_TTL_SECONDS):
+        self.max_size = max_size
+        self.ttl = ttl
+        self._store: OrderedDict[str, SessionState] = OrderedDict()
+        self._last_access: Dict[str, float] = {}
+
+    def get(self, sid: str) -> Optional[SessionState]:
+        now = time.time()
+        if sid in self._store:
+            if now - self._last_access.get(sid, 0) > self.ttl:
+                self.evict(sid)
+                return None
+            self._store.move_to_end(sid)
+            self._last_access[sid] = now
+            return self._store[sid]
+        return None
+
+    def put(self, sid: str, session: SessionState):
+        now = time.time()
+        self.cleanup_expired(now)
+        if sid in self._store:
+            self._store.move_to_end(sid)
+        else:
+            if len(self._store) >= self.max_size:
+                oldest_sid, _ = self._store.popitem(last=False)
+                self._last_access.pop(oldest_sid, None)
+        self._store[sid] = session
+        self._last_access[sid] = now
+
+    def evict(self, sid: str):
+        self._store.pop(sid, None)
+        self._last_access.pop(sid, None)
+
+    def cleanup_expired(self, now: Optional[float] = None):
+        if now is None:
+            now = time.time()
+        expired = [sid for sid, ts in self._last_access.items() if now - ts > self.ttl]
+        for sid in expired:
+            self.evict(sid)
+
+    def __len__(self) -> int:
+        return len(self._store)
+
+    def contains(self, sid: str) -> bool:
+        return sid in self._store
+
+
+session_store = BoundedSessionStore()
+_LEAD_TEMPLATES_CACHE: Dict[str, List[dict]] = {}
+
+def _load_lead_templates(vertical: str) -> List[dict]:
+    """Caches parsed CSV lead rows in-memory to prevent repeated disk reads."""
+    vert = vertical or "technology"
+    if vert in _LEAD_TEMPLATES_CACHE:
+        return _LEAD_TEMPLATES_CACHE[vert]
+        
+    base_dir = os.path.dirname(__file__)
+    csv_path = os.path.join(base_dir, "docs", f"{vert}_leads.csv")
+    templates = []
+    
+    if os.path.exists(csv_path):
+        with open(csv_path, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for i, row in enumerate(reader):
+                templates.append(dict(row))
+    _LEAD_TEMPLATES_CACHE[vert] = templates
+    return templates
+
 
 def get_session(request: Request) -> SessionState:
     """Helper to extract or instantiate SessionState from X-Session-ID header or query param."""
     sid = request.headers.get("X-Session-ID") or request.query_params.get("session_id") or "default_session"
-    if sid not in sessions:
-        sessions[sid] = SessionState(sid)
-        # Initialize default queue items for new session
-        _populate_initial_queue(sessions[sid])
-    return sessions[sid]
+    session = session_store.get(sid)
+    if session is None:
+        session = SessionState(sid)
+        _populate_initial_queue(session)
+        session_store.put(sid, session)
+    return session
+
 
 def _populate_initial_queue(session: SessionState):
-    """Populates session-isolated escalation queue and 50 processed leads from docs/{vertical}_leads.csv."""
-    import csv
+    """Populates session-isolated escalation queue and 50 processed leads using cached templates."""
     vert = session.selected_vertical or "technology"
-    base_dir = os.path.dirname(__file__)
-    csv_path = os.path.join(base_dir, "docs", f"{vert}_leads.csv")
+    rows = _load_lead_templates(vert)
     
     session.processed_leads.clear()
     session.hitl_queue.clear()
@@ -128,58 +217,55 @@ def _populate_initial_queue(session: SessionState):
     session.metrics["auto_rejected"] = 0
     session.metrics["total_pipeline"] = 0
     
-    if os.path.exists(csv_path):
-        with open(csv_path, "r", encoding="utf-8") as f:
-            reader = csv.DictReader(f)
-            for i, row in enumerate(reader):
-                arr = int(row.get("annual_revenue_usd") or 250000)
-                comp = row.get("company_name", f"Account {i+1}")
-                b_flag = row.get("bankruptcy_flag", "NORMAL")
-                f_event = row.get("funding_event", "NONE")
-                news = row.get("recent_news", "")
-                pain = row.get("pain_points", "")
-                comp_needs = row.get("compliance_needs", "")
-                
-                # Intelligent routing based on signals
-                if b_flag == "BANKRUPTCY" or "chapter 11" in news.lower() or arr < 25000:
-                    dec = "auto_rejected"
-                    sec_pass = False
-                    p_fit = "Weak"
-                elif arr > 500000 or "air-gap" in pain.lower() or "on-prem" in pain.lower() or f_event in ["ACQUISITION", "MA_TARGET", "MERGER"]:
-                    dec = "escalated"
-                    sec_pass = True
-                    p_fit = "Strong"
-                    if len(session.hitl_queue) < 4:
-                        h_id = f"HITL-{vert[:3].upper()}-{len(session.hitl_queue)+1:02d}"
-                        session.hitl_queue[h_id] = {
-                            "lead": {"company": comp, "industry": vert.capitalize()},
-                            "commercial": {"estimated_arr": arr},
-                            "product": {"fit": p_fit},
-                            "security": {"can_support": True},
-                            "reasons": [news or f"High ARR (${arr:,.0f}) requires executive signoff", pain or comp_needs],
-                            "graph_warning": f"[!] Knowledge Memory: {comp} has complex architectural requirements flagged for DVP verification." if ("on-prem" in pain.lower() or "air-gap" in pain.lower()) else ""
-                        }
-                else:
-                    dec = "auto_approved"
-                    sec_pass = True
-                    p_fit = "Strong" if arr > 150000 else "Medium"
-                    
-                session.processed_leads.append({
-                    "id": row.get("lead_id", f"LEAD-{i+1:03d}"),
-                    "company": comp,
-                    "industry": vert.capitalize(),
-                    "decision": dec,
-                    "arr": arr,
-                    "security_pass": sec_pass,
-                    "product_fit": p_fit,
-                    "processing_time_ms": 1100 + (i % 8) * 120,
-                    "agents_used": 7 if dec == "escalated" else (6 if dec == "auto_approved" else 4),
-                    "tool_calls": 3 if dec == "escalated" else 2,
-                    "kg_queries": 2 if dec == "escalated" else 1,
-                    "recent_news": news,
-                    "bankruptcy_flag": b_flag,
-                    "funding_event": f_event
-                })
+    for i, row in enumerate(rows):
+        arr = int(row.get("annual_revenue_usd") or 250000)
+        comp = row.get("company_name", f"Account {i+1}")
+        b_flag = row.get("bankruptcy_flag", "NORMAL")
+        f_event = row.get("funding_event", "NONE")
+        news = row.get("recent_news", "")
+        pain = row.get("pain_points", "")
+        comp_needs = row.get("compliance_needs", "")
+        
+        # Intelligent routing based on signals
+        if b_flag == "BANKRUPTCY" or "chapter 11" in news.lower() or arr < 25000:
+            dec = "auto_rejected"
+            sec_pass = False
+            p_fit = "Weak"
+        elif arr > 500000 or "air-gap" in pain.lower() or "on-prem" in pain.lower() or f_event in ["ACQUISITION", "MA_TARGET", "MERGER"]:
+            dec = "escalated"
+            sec_pass = True
+            p_fit = "Strong"
+            if len(session.hitl_queue) < 4:
+                h_id = f"HITL-{vert[:3].upper()}-{len(session.hitl_queue)+1:02d}"
+                session.hitl_queue[h_id] = {
+                    "lead": {"company": comp, "industry": vert.capitalize()},
+                    "commercial": {"estimated_arr": arr},
+                    "product": {"fit": p_fit},
+                    "security": {"can_support": True},
+                    "reasons": [news or f"High ARR (${arr:,.0f}) requires executive signoff", pain or comp_needs],
+                    "graph_warning": f"[!] Knowledge Memory: {comp} has complex architectural requirements flagged for DVP verification." if ("on-prem" in pain.lower() or "air-gap" in pain.lower()) else ""
+                }
+        else:
+            dec = "auto_approved"
+            sec_pass = True
+            p_fit = "Strong" if arr > 150000 else "Medium"
+            
+        session.processed_leads.append({
+            "id": row.get("lead_id", f"LEAD-{i+1:03d}"),
+            "company": comp,
+            "industry": vert.capitalize(),
+            "decision": dec,
+            "arr": arr,
+            "security_pass": sec_pass,
+            "product_fit": p_fit,
+            "processing_time_ms": 1100 + (i % 8) * 120,
+            "agents_used": 7 if dec == "escalated" else (6 if dec == "auto_approved" else 4),
+            "tool_calls": 3 if dec == "escalated" else 2,
+            "kg_queries": 2 if dec == "escalated" else 1,
+            "recent_news": news,
+            "bankruptcy_flag": b_flag,
+            "funding_event": f_event
+        })
 
     for lead in session.processed_leads:
         if lead["decision"] == "auto_approved":
@@ -197,11 +283,12 @@ def _populate_initial_queue(session: SessionState):
         session.consumption["mcp_tool_calls"] += 0.01 * lead.get("tool_calls", 0)
         session.consumption["kg_queries"] += 0.005 * lead.get("kg_queries", 0)
 
+
 # ─── APPLICATION LIFESPAN MANAGEMENT ──────────────────────────────────────────
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """
-    Manages lifespan events for FastMCP clients and KnowledgeGraphEngine.
+    Manages lifespan events for FastMCP clients, KnowledgeGraphEngine, and pre-warmed caches.
     """
     base_dir = os.path.dirname(__file__)
     crm_path = os.path.join(base_dir, "mcp_servers", "crm_mcp.py")
@@ -209,6 +296,13 @@ async def lifespan(app: FastAPI):
     sec_path = os.path.join(base_dir, "mcp_servers", "security_mcp.py")
     
     print("[BOOT] Booting NOTCRM FastMCP Servers (CRM, KB, Security)...")
+    print(f"[BOOT] Initializing Bounded Session Store (Capacity: {MAX_CONCURRENT_SESSIONS} concurrent sessions, TTL: {SESSION_TTL_SECONDS}s)")
+    
+    # Pre-warm lead templates cache
+    for v in ["technology", "hospitality", "retail", "banking"]:
+        _load_lead_templates(v)
+    print(f"[BOOT] Pre-warmed lead datasets: {list(_LEAD_TEMPLATES_CACHE.keys())}")
+    
     async with Client(crm_path) as crm, Client(kb_path) as kb, Client(sec_path) as sec:
         global_state.crm_client = crm
         global_state.kb_client = kb
@@ -232,14 +326,29 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="NOTCRM  --  Enterprise AI Lead Qualification & Governance Engine",
-    description="Not another CRM. An autonomous agentic lead qualification engine featuring Multi-Agent Orchestration, FastMCP Servers, A2A Protocol, Knowledge Graph Memory, Evals Suite, and Multi-Session Isolation.",
+    description="An autonomous agentic lead qualification engine featuring Multi-Agent Orchestration, FastMCP Servers, A2A Protocol, Knowledge Graph Memory, Evals Suite, and Multi-Session Isolation.",
     version="8.0.0",
     lifespan=lifespan
 )
 
-# Enable GZIP compression for all responses > 500 bytes (reduces payload by up to 85%)
+# Enable GZIP compression for all responses > 1400 bytes (MTU-aligned to reduce CPU compression churn)
 from fastapi.middleware.gzip import GZipMiddleware
-app.add_middleware(GZipMiddleware, minimum_size=500)
+app.add_middleware(GZipMiddleware, minimum_size=1400)
+
+# Capacity Guard Middleware for Concurrency Protection (512MB RAM target)
+@app.middleware("http")
+async def capacity_guard_middleware(request: Request, call_next):
+    if len(session_store) >= MAX_CONCURRENT_SESSIONS:
+        session_store.cleanup_expired()
+        sid = request.headers.get("X-Session-ID") or request.query_params.get("session_id") or "default_session"
+        if len(session_store) >= MAX_CONCURRENT_SESSIONS and not session_store.contains(sid) and request.url.path.startswith("/api/"):
+            return JSONResponse(
+                status_code=503,
+                content={"error": "Server is at maximum concurrent capacity. Please try again in a few seconds.", "retry_after": 30},
+                headers={"Retry-After": "30"}
+            )
+    response = await call_next(request)
+    return response
 
 # ─── PYDANTIC MODELS FOR APIS ──────────────────────────────────────────────────
 class DecisionRequest(BaseModel):
@@ -257,7 +366,7 @@ class QuizSubmission(BaseModel):
 async def get_agent_roster():
     """Returns 21 candidate agent profiles across 7 DAG roles with personality tradeoffs."""
     return {
-        "title": "NOTCRM V2.0 Agent Hiring & Candidate Roster",
+        "title": "NOTCRM Agent Hiring & Candidate Roster",
         "roles": ROLES_CATALOG,
         "total_candidates": 21,
         "roles_count": len(ROLES_CATALOG)
@@ -660,7 +769,7 @@ async def get_worker_llms_architecture():
     """Returns technical specification of all worker LLMs powering NOTCRM components."""
     return {
         "title": "NOTCRM Worker LLM & Multi-Model Architecture",
-        "description": "NOTCRM employs a heterogeneous multi-model architecture. Instead of running a single costly foundation model, specialized worker LLMs are assigned per operational role based on latency, reasoning depth, and cost constraints.",
+        "description": "NOTCRM employs a heterogeneous multi-model architecture. The engine assigns specialized worker LLMs per operational role based on latency, reasoning depth, and cost constraints.",
         "worker_fleet": [
             {
                 "role": "DAG Orchestrator & Dispatcher",
@@ -717,22 +826,15 @@ async def get_worker_llms_architecture():
 async def get_step_intuition(step_id: str, request: Request):
     """Returns plain-English architectural intuition & key takeaways for any trace/eval step."""
     session = get_session(request)
-    from agents.llm_agent_runner import LLMAgentRunner
-    runner = LLMAgentRunner()
-    intuition = runner.generate_step_intuition(step_id, {}, session.hired_agents)
+    intuition = LLM_RUNNER.generate_step_intuition(step_id, {}, session.hired_agents)
     return intuition
 
 @app.get("/api/graph")
 async def get_knowledge_graph_view():
-    """Renders interactive D3.js Knowledge Graph visualization."""
+    """Renders interactive D3.js Knowledge Graph visualization from in-memory cache."""
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    from export_graph import export_interactive_graph
-    export_interactive_graph()
-    try:
-        with open("enterprise_brain.html", "r", encoding="utf-8") as f:
-            return HTMLResponse(f.read())
-    except Exception as e:
-        return HTMLResponse(f"<h3>Knowledge Graph rendering in progress... ({str(e)})</h3>")
+    html = get_interactive_graph_html()
+    return HTMLResponse(content=html)
 
 # ─── FOUNDATION ARCHITECTURE ENDPOINTS ────────────────────────────────────────
 @app.get("/api/foundation/architecture")
@@ -871,7 +973,6 @@ async def get_knowledge_graph_info():
 @app.get("/api/evals/contract")
 async def get_eval_contract():
     """Evaluates system telemetry against formal 4-category Evaluation Contract."""
-    contract_engine = EvalContractEngine()
     current_measured = {
         "decision_accuracy": 0.971,
         "churn_prevention_rate": 0.952,
@@ -886,47 +987,34 @@ async def get_eval_contract():
         "high_risk_false_approval_rate": 0.000,
         "policy_sequence_integrity": 1.000
     }
-    return contract_engine.evaluate_metrics(current_measured)
+    return EVAL_CONTRACT_ENGINE.evaluate_metrics(current_measured)
 
 @app.get("/api/evals/golden")
 async def get_golden_dataset():
     """Returns versioned Golden Dataset across 6 failure taxonomies."""
-    base_dir = os.path.dirname(__file__)
-    data_path = os.path.join(base_dir, "data", "golden_dataset_v1.json")
-    dataset = load_golden_dataset(data_path)
-    return {"total_cases": len(dataset), "cases": dataset}
+    return {"total_cases": len(GOLDEN_DATASET_CACHE), "cases": GOLDEN_DATASET_CACHE}
 
 @app.get("/api/evals/component")
 async def get_component_evals():
     """Runs isolated component-level evaluation across individual agent modules."""
-    base_dir = os.path.dirname(__file__)
-    data_path = os.path.join(base_dir, "data", "golden_dataset_v1.json")
-    evaluator = ComponentEvaluator(data_path)
-    return evaluator.run_all_component_evals()
+    return COMPONENT_EVALUATOR.run_all_component_evals()
 
 @app.get("/api/evals/trajectory")
 async def get_trajectory_evals():
     """Evaluates process quality, step efficiency, and tool sequence integrity."""
-    base_dir = os.path.dirname(__file__)
-    data_path = os.path.join(base_dir, "data", "golden_dataset_v1.json")
-    evaluator = TrajectoryEvaluator(data_path)
-    return evaluator.run_benchmark()
+    return TRAJECTORY_EVALUATOR.run_benchmark()
 
 @app.get("/api/evals/verifier")
 async def get_verifier_report():
     """Executes rule-based Independent Verifier ahead of LLM consensus."""
     base_dir = os.path.dirname(__file__)
     data_path = os.path.join(base_dir, "data", "golden_dataset_v1.json")
-    verifier = IndependentVerifier()
-    return verifier.verify_golden_dataset(data_path)
+    return INDEPENDENT_VERIFIER.verify_golden_dataset(data_path)
 
 @app.get("/api/evals/regression")
 async def get_regression_report():
     """Runs regression harness suite comparing Baseline vs Hardened vs Governed architecture."""
-    base_dir = os.path.dirname(__file__)
-    data_path = os.path.join(base_dir, "data", "golden_dataset_v1.json")
-    harness = RegressionHarness(data_path)
-    return harness.run_experiment_suite()
+    return REGRESSION_HARNESS.run_experiment_suite()
 
 # --- GOVERNANCE & GUARDRAILS ENDPOINTS ---
 @app.get("/api/governance/policy")
@@ -1006,7 +1094,7 @@ QUIZ_BANK = [
         "correct_option": "B",
         "explanations": {
             "A": "Incorrect. Increasing context size or adjusting temperature does not solve prompt contamination or conflicting tool instructions.",
-            "B": "Correct! Decomposing into specialized agents enforces Separation of Concerns (AGENTS.md Rule 4). Each agent has a single focused responsibility, distinct prompt boundary, and isolated evaluation harness.",
+            "B": "Correct. Decomposing into specialized agents enforces Separation of Concerns (AGENTS.md Rule 4). Each agent has a single focused responsibility, distinct prompt boundary, and isolated evaluation harness.",
             "C": "Suboptimal & Costly. Fine-tuning models for multi-tool selection is expensive and brittle compared to modular agent decomposition.",
             "D": "Incorrect. Retrying broken tool calls will simply repeat the same prompt instruction failures."
         }
@@ -1026,7 +1114,7 @@ QUIZ_BANK = [
         "correct_option": "B",
         "explanations": {
             "A": "Suboptimal. Tight coupling inside agent classes creates technical debt and breaks modularity.",
-            "B": "Correct! MCP acts as a standardized API gateway pattern for AI agents (AGENTS.md Rule 5). Agents consume uniform tools (lookup_account, get_opportunities), keeping agent logic completely decoupled from backend storage.",
+            "B": "Correct. MCP acts as a standardized API gateway pattern for AI agents (AGENTS.md Rule 5). Agents consume uniform tools (lookup_account, get_opportunities), keeping agent logic completely decoupled from backend storage.",
             "C": "Incorrect. Static JSON files do not support real-time enterprise data retrieval.",
             "D": "Dangerous & Non-Compliant. Direct database execution poses severe security and compliance risks."
         }
@@ -1046,7 +1134,7 @@ QUIZ_BANK = [
         "correct_option": "B",
         "explanations": {
             "A": "Incorrect. Python async handles sequential await calls easily.",
-            "B": "Correct! When DAG steps do not have data dependencies, fan-out parallel execution is a core latency optimization. Furthermore, using a Knowledge Graph at the decision gate provides self-learning insights from historical deal outcomes.",
+            "B": "Correct. When DAG steps do not have data dependencies, fan-out parallel execution is a core latency optimization. Furthermore, using a Knowledge Graph at the decision gate provides self-learning insights from historical deal outcomes.",
             "C": "Incorrect. Execution timing does not inherently change single-agent LLM reasoning accuracy.",
             "D": "Incorrect. Agents in a parallel DAG receive the shared context created by upstream agents."
         }
@@ -1067,7 +1155,7 @@ QUIZ_BANK = [
         "correct_option": "B",
         "explanations": {
             "A": "Suboptimal. Larger models can still hallucinate without explicit governance contracts.",
-            "B": "Correct! System quality requires an explicit Evaluation Contract that aligns technical metrics with business SLAs, evaluated against a Golden Dataset representing real failure taxonomies (Clean, Ambiguous, Stale, Conflicting, Adversarial).",
+            "B": "Correct. System quality requires an explicit Evaluation Contract that aligns technical metrics with business SLAs, evaluated against a Golden Dataset representing real failure taxonomies (Clean, Ambiguous, Stale, Conflicting, Adversarial).",
             "C": "Incorrect. Terminal logging does not provide systematic regression evaluation.",
             "D": "Incorrect. Server RAM has no effect on model alignment or governance policies."
         }
@@ -1087,7 +1175,7 @@ QUIZ_BANK = [
         "correct_option": "B",
         "explanations": {
             "A": "Incorrect. Trajectory evaluation goes far beyond network latency.",
-            "B": "Correct! Process quality matters! An agent arriving at a correct decision through an unsafe, hallucinated, or redundant tool call sequence is still a production defect. Trajectory scorecards benchmark procedural integrity.",
+            "B": "Correct. Process quality matters. An agent arriving at a correct decision through an unsafe, hallucinated, or redundant tool call sequence is still a production defect. Trajectory scorecards benchmark procedural integrity.",
             "C": "Incorrect. Trajectory scorecards complement rather than replace unit tests.",
             "D": "Incorrect. Input/output evaluation remains essential alongside trajectory analysis."
         }
@@ -1107,7 +1195,7 @@ QUIZ_BANK = [
         "correct_option": "B",
         "explanations": {
             "A": "Insufficient. Manual testing on 2 leads cannot catch subtle edge-case regressions.",
-            "B": "Correct! Automated regression testing prevents invisible degradations (AGENTS.md Rule 3: Never trade a working product for unfinished complexity). An Independent Verifier enforces non-negotiable business rules deterministically.",
+            "B": "Correct. Automated regression testing prevents invisible degradations (AGENTS.md Rule 3: Never trade a working product for unfinished complexity). An Independent Verifier enforces non-negotiable business rules deterministically.",
             "C": "Dangerous. Prompt tweaks frequently alter tool invocation patterns and decision boundaries.",
             "D": "Unacceptable. Production deployment without regression testing violates basic engineering standards."
         }

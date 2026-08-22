@@ -1,6 +1,6 @@
 # Day 6 Regression Experiment Report v1: Architecture & Verifier Comparative Analysis
 
-Version: 1.0 (Week 1 — Evals & Verification)  
+Version: 1.0 (Week 1 :  Evals & Verification)  
 Experiment Harness Target: Comparative evaluation across 3 system variants on the 35 Golden Dataset cases.
 
 ---

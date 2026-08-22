@@ -790,6 +790,90 @@ class TestNotCrmV2HiringAndObservability(unittest.TestCase):
         self.assertEqual(data["status"], "success")
         self.assertIn("mpandemp10@gmail.com", data["target_email"])
 
+    def test_54_exhaustive_all_13_intuition_steps(self):
+        """Verifies GET /api/intuition/{step_id} returns valid cards across all 13 DAG and Evals steps."""
+        required_steps = ["f1", "f2", "f3", "f4", "e1", "e2", "e3", "e4", "e5", "e6", "g1", "g2", "g3"]
+        for step in required_steps:
+            status, data, _, _ = http_req(f"/api/intuition/{step}")
+            self.assertEqual(status, 200, f"Failed for intuition step {step}")
+            self.assertIn("title", data)
+            self.assertIn("analogy", data)
+            self.assertIn("what_happened", data)
+            self.assertIn("what_to_notice", data)
+            self.assertIn("production_lesson", data)
+            self.assertGreater(len(data["production_lesson"]), 20)
+
+    def test_55_intuition_fallback_unknown_step(self):
+        """Verifies GET /api/intuition/unknown_step returns a graceful fallback card."""
+        status, data, _, _ = http_req("/api/intuition/nonexistent_step_999")
+        self.assertEqual(status, 200)
+        self.assertIn("title", data)
+        self.assertIn("NONEXISTENT_STEP_999", data["title"])
+        self.assertIn("analogy", data)
+
+    def test_56_static_index_html_http_serving(self):
+        """Verifies FastAPI mounts and serves index.html at root."""
+        status_root, _, content_root, ct_root = http_req("/")
+        self.assertEqual(status_root, 200)
+        self.assertIn("text/html", ct_root)
+        self.assertIn("NOTCRM", content_root)
+
+        status_idx, _, content_idx, ct_idx = http_req("/index.html")
+        self.assertEqual(status_idx, 200)
+        self.assertIn("text/html", ct_idx)
+
+    def test_57_init_session_invalid_vertical_fallback(self):
+        """Verifies session initialization with unknown vertical falls back to technology."""
+        status, data, _, _ = http_req("/api/session/init", method="POST", body={"vertical": "crypto_blockchain"})
+        self.assertEqual(status, 200)
+        self.assertEqual(data["vertical"], "technology")
+
+    def test_58_feedback_empty_submission_validation(self):
+        """Verifies empty feedback payload is rejected cleanly."""
+        status, data, _, _ = http_req("/api/feedback", method="POST", body={"feedback": "   ", "email": "test@example.com"})
+        self.assertEqual(status, 200)
+        self.assertEqual(data["status"], "error")
+        self.assertIn("cannot be empty", data["message"])
+
+    def test_59_session_header_fallback_default(self):
+        """Verifies requests without X-Session-ID header default gracefully."""
+        status, data, _, _ = http_req("/api/queue", headers={})
+        self.assertEqual(status, 200)
+        self.assertIn("queue", data)
+
+    def test_60_all_docs_download_urls_accessible(self):
+        """Verifies all download URLs listed in /api/docs catalog are accessible."""
+        status, catalog, _, _ = http_req("/api/docs")
+        self.assertEqual(status, 200)
+        docs = catalog.get("documents", [])
+        self.assertGreater(len(docs), 3)
+        for doc in docs:
+            d_url = doc["download_url"]
+            doc_status, _, content, ct = http_req(d_url)
+            self.assertEqual(doc_status, 200, f"Download URL failed: {d_url}")
+            self.assertGreater(len(content), 10, f"Content too short for {d_url}")
+
+    def test_61_pipeline_funnel_mathematical_consistency(self):
+        """Verifies pipeline funnel stage invariant mathematics."""
+        sid = "test_funnel_math_e2e"
+        http_req("/api/session/init", method="POST", body={"vertical": "technology"}, headers={"X-Session-ID": sid})
+        status, funnel, _, _ = http_req("/api/pipeline/funnel", headers={"X-Session-ID": sid})
+        self.assertEqual(status, 200)
+        stage_map = {s["name"]: s["count"] for s in funnel["stages"]}
+        pct_map = {s["name"]: s["pct"] for s in funnel["stages"]}
+        self.assertEqual(stage_map["Ingested"], 50)
+        self.assertEqual(stage_map["Auto-Approved"] + stage_map["Auto-Rejected"] + stage_map["Escalated"], 50)
+        for name, pct in pct_map.items():
+            self.assertTrue(0 <= pct <= 100, f"Stage {name} percentage out of bounds: {pct}%")
+
+    def test_62_metrics_cross_field_invariants(self):
+        """Verifies mathematical consistency across metrics and savings calculation."""
+        sid = "test_metrics_invariants_e2e"
+        http_req("/api/session/init", method="POST", body={"vertical": "technology"}, headers={"X-Session-ID": sid})
+        _, m, _, _ = http_req("/api/metrics", headers={"X-Session-ID": sid})
+        expected_savings = round((m["auto_approved"] + m["auto_rejected"] + m["manual_approved"] + m["manual_rejected"]) * 4.5, 1)
+        self.assertEqual(m["commercial_savings"], expected_savings)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

@@ -1,6 +1,6 @@
 # Day 5 Independent Verification Layer: Deterministic Proof Hierarchy
 
-Version: 1.0 (Week 1 — Evals & Verification)  
+Version: 1.0 (Week 1 :  Evals & Verification)  
 Focus: Implementing deterministic `Claim ➔ Evidence ➔ Freshness ➔ Policy ➔ Decision` verification that overrides LLM consensus.
 
 ---

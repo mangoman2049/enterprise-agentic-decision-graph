@@ -37,7 +37,7 @@ Key benefits:
 
 ## How Tool Selection Works
 
-In our simulation, each agent has a **hardcoded tool mapping** (Research Agent always calls `lookup_account`). In a production LLM-powered agent, the model receives the tool schema and **decides which tool to call** based on the task context — this is called **"tool use"** or **"function calling"**.
+In our simulation, each agent has a **hardcoded tool mapping** (Research Agent always calls `lookup_account`). In a production LLM-powered agent, the model receives the tool schema and **decides which tool to call** based on the task context :  this is called **"tool use"** or **"function calling"**.
 
 ## Transport Options
 
@@ -48,6 +48,6 @@ In our simulation, each agent has a **hardcoded tool mapping** (Research Agent a
 | **HTTP** | Production | Standard HTTP request/response for network-distributed servers |
 
 ## Code Reference
-- `mcp_servers/crm_mcp.py` — CRM MCP server implementation
-- `mcp_servers/kb_mcp.py` — Knowledge Base MCP server
-- `mcp_servers/security_mcp.py` — Security compliance MCP server
+- `mcp_servers/crm_mcp.py` :  CRM MCP server implementation
+- `mcp_servers/kb_mcp.py` :  Knowledge Base MCP server
+- `mcp_servers/security_mcp.py` :  Security compliance MCP server

@@ -1,6 +1,6 @@
 # Evaluation Contract: Governed Enterprise Deal Decisioning System
 
-Version: 1.0 (Week 1 — Evals & Verification)  
+Version: 1.0 (Week 1 :  Evals & Verification)  
 System Target: Multi-Agent A2A Lead Qualification & Deal Approval Engine  
 
 ---
