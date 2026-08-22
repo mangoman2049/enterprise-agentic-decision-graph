@@ -50,5 +50,6 @@ Thumbs.db
 
 # Logs & system
 *.log
+*.jsonl
 .agents/
 .system_generated/

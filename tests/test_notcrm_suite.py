@@ -780,6 +780,16 @@ class TestNotCrmV2HiringAndObservability(unittest.TestCase):
         self.assertTrue(any("Research" in r for r in roles))
         self.assertTrue(any("Security" in r for r in roles))
 
+    def test_53_feedback_submission(self):
+        status, data, _, _ = http_req(
+            "/api/feedback",
+            method="POST",
+            body={"feedback": "Exceptional architecture walkthrough", "email": "mpandemp10@gmail.com"}
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(data["status"], "success")
+        self.assertIn("mpandemp10@gmail.com", data["target_email"])
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

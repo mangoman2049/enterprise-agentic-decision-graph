@@ -12,6 +12,8 @@ import asyncio
 import json
 import os
 import sys
+from datetime import datetime, timezone
+from pathlib import Path
 from contextlib import asynccontextmanager
 from typing import Dict, Any, List, Optional
 from fastapi import FastAPI, Request, HTTPException
@@ -548,6 +550,39 @@ async def get_observability_hub(request: Request):
 async def get_consumption(request: Request):
     """Returns real-time outcome-based billing and observability breakdown."""
     return await get_observability_hub(request)
+
+@app.post("/api/feedback")
+async def submit_feedback(request: Request):
+    """Receives user feedback and persists it to feedback.jsonl."""
+    try:
+        data = await request.json()
+        feedback_text = (data.get("feedback") or "").strip()
+        email = (data.get("email") or "").strip()
+        session = get_session(request)
+        
+        if not feedback_text:
+            return {"status": "error", "message": "Feedback content cannot be empty."}
+        
+        entry = {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "session_id": session.session_id,
+            "vertical": session.selected_vertical,
+            "email": email or "anonymous",
+            "feedback": feedback_text
+        }
+        
+        feedback_path = Path(__file__).parent / "feedback.jsonl"
+        with open(feedback_path, "a", encoding="utf-8") as f:
+            f.write(json.dumps(entry) + "\n")
+            
+        return {
+            "status": "success",
+            "message": "Thank you for your feedback. Your submission has been recorded.",
+            "target_email": "mpandemp10@gmail.com"
+        }
+    except Exception as e:
+        return {"status": "error", "message": f"Failed to record feedback: {str(e)}"}
+
 
 @app.get("/api/reference/agentic-principles")
 async def get_agentic_principles():
