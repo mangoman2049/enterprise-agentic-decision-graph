@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOTCRM: Autonomous AI Lead Engine</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-M7C90S8YYC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-M7C90S8YYC', {
+        page_title: 'NOTCRM: Autonomous AI Lead Engine',
+        send_page_view: true
+      });
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1354,6 +1366,21 @@
         let currentQuizIndex = 0;
         let selectedAnswers = {};
 
+        // State-of-the-art GA4 Event Tracking Helper
+        function trackEvent(eventName, eventParams = {}) {
+            try {
+                if (typeof gtag === 'function') {
+                    gtag('event', eventName, {
+                        session_id: (state && state.sid) ? state.sid : 'anonymous',
+                        vertical: (state && state.vertical) ? state.vertical : 'technology',
+                        ...eventParams
+                    });
+                }
+            } catch (err) {
+                console.warn('[GA4] Event tracking error:', err);
+            }
+        }
+
         // Initialization
         document.addEventListener('DOMContentLoaded', () => {
             updateSidebar();
@@ -1460,6 +1487,7 @@
         function selectCandidate(roleId, candidateId) {
             state.hiredAgents[roleId] = candidateId;
             sessionStorage.setItem('notcrm_hired_agents', JSON.stringify(state.hiredAgents));
+            trackEvent('select_candidate', { role_id: roleId, candidate_id: candidateId });
             
             // Update active candidate cards styling
             if (cachedRoster) {
@@ -1683,6 +1711,7 @@
         function selectVertical(vert) {
             state.vertical = vert;
             sessionStorage.setItem('notcrm_vertical', vert);
+            trackEvent('select_vertical', { vertical: vert });
 
             // Update UI vertical cards
             ['technology', 'hospitality', 'retail', 'banking'].forEach(v => {
@@ -1717,6 +1746,11 @@
                 selected_agents: state.hiredAgents
             };
 
+            trackEvent('deploy_hired_fleet', {
+                vertical: state.vertical || 'technology',
+                agent_count: Object.keys(state.hiredAgents).length
+            });
+
             apiFetch('/api/session/init', { method: 'POST', body: JSON.stringify(payload) }).then(res => {
                 if (res.session_id) state.sid = res.session_id;
                 updateSidebar();
@@ -1730,10 +1764,12 @@
         }
 
         function downloadSample(vertical) {
+            trackEvent('download_sample_dataset', { vertical: vertical, file_name: `${vertical}_leads_sample.csv` });
             window.location.href = `/api/sample-datasets/${vertical}`;
         }
 
         function resetSession() {
+            trackEvent('reset_session', { session_id: state.sid });
             apiFetch('/api/reset', { method: 'POST' }).catch(() => {});
             sessionStorage.clear();
             location.reload();
@@ -1768,9 +1804,22 @@
             state.progress[key] = true;
             sessionStorage.setItem('notcrm_progress', JSON.stringify(state.progress));
             updateSidebar();
+            trackEvent('concept_progress_verified', { concept_key: key });
         }
 
         function switchTab(tabId, el) {
+            const tabNames = {
+                'tab1': 'Welcome & Hiring Roster',
+                'tab2': 'DVP Operational Hub',
+                'tab3': 'Foundation Architecture Lab',
+                'tab4': 'Evals & Verification Lab',
+                'tab5': 'Governance & Safety Lab',
+                'tab6': 'Observability & Billing Hub'
+            };
+            const tabTitle = tabNames[tabId] || tabId;
+            trackEvent('tab_switched', { tab_id: tabId, tab_name: tabTitle });
+            trackEvent('page_view', { page_title: tabTitle, page_location: window.location.origin + '/#' + tabId });
+
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             if (el && el.classList) {
                 el.classList.add('active');
@@ -2041,6 +2090,7 @@
         }
 
         async function runStep(step, endpoint) {
+            trackEvent('run_educational_step', { step_id: step, endpoint: endpoint });
             try {
                 const res = await apiFetch(endpoint);
                 const el = document.getElementById('res-' + step);
@@ -2371,6 +2421,7 @@
         }
 
         async function resolveQueue(hitlId, decision) {
+            trackEvent('resolve_hitl_queue', { hitl_id: hitlId, decision: decision });
             try {
                 await apiFetch(`/api/decision/${hitlId}`, { method: 'POST', body: JSON.stringify({ decision }) });
                 // Reload DVP hub data
@@ -2379,6 +2430,7 @@
         }
 
         function loadGraph() {
+            trackEvent('knowledge_graph_loaded');
             const placeholder = document.getElementById('kg-placeholder');
             if (placeholder) placeholder.style.display = 'none';
             const container = document.getElementById('kg-iframe');
@@ -2420,8 +2472,15 @@
             updateQuizView();
         }
 
-        function openModal() { document.getElementById('quiz-modal').classList.add('active'); updateQuizView(); }
-        function closeModal() { document.getElementById('quiz-modal').classList.remove('active'); }
+        function openModal() {
+            trackEvent('quiz_opened', { total_questions: quizQuestions.length });
+            document.getElementById('quiz-modal').classList.add('active');
+            updateQuizView();
+        }
+        function closeModal() {
+            trackEvent('quiz_closed');
+            document.getElementById('quiz-modal').classList.remove('active');
+        }
         
         async function selectAnswer(qIdx, optKey) {
             const q = quizQuestions[qIdx];
@@ -2439,6 +2498,13 @@
             const isCorrect = (optKey === q.correct_option);
             const explanation = (q.explanations && q.explanations[optKey]) ? q.explanations[optKey] : (isCorrect ? 'Correct!' : 'Incorrect.');
             
+            trackEvent('quiz_answer_selected', {
+                question_id: qid,
+                question_idx: qIdx,
+                option_selected: optKey,
+                is_correct: isCorrect
+            });
+
             if (isCorrect) {
                 fb.innerHTML = `<strong>Correct!</strong> ${explanation}`;
                 fb.className = 'quiz-feedback correct';
@@ -2464,6 +2530,12 @@
                     kBtn.classList.remove('btn-primary');
                     kBtn.style.background = passed ? 'var(--emerald)' : 'var(--amber)';
                     kBtn.innerText = `Knowledge Check: ${score}% (${passed ? 'Passed' : 'Reviewed'})`;
+
+                    trackEvent('quiz_completed', {
+                        score_pct: score,
+                        passed: passed,
+                        total_questions: totalCount
+                    });
                 } catch(e) {}
             }
         }
@@ -2626,15 +2698,18 @@
         }
 
         async function openDocsModal() {
+            trackEvent('docs_modal_opened');
             document.getElementById('docs-modal').classList.add('active');
             await loadDocsModalFiles();
         }
 
         function closeDocsModal() {
+            trackEvent('docs_modal_closed');
             document.getElementById('docs-modal').classList.remove('active');
         }
 
         function switchDocsTab(tabKey) {
+            trackEvent('docs_tab_switched', { doc_tab: tabKey });
             document.querySelectorAll('.docs-tab-btn').forEach(b => {
                 b.style.background = 'white';
                 b.style.color = 'var(--text-main)';
@@ -2670,7 +2745,7 @@
                                 <strong>${doc.name}</strong>
                                 <span style="font-size: 11px; color: var(--text-muted); margin-left: 8px;">(${doc.type}, ${doc.size_kb} KB)</span>
                             </div>
-                            <a href="${doc.download_url}" target="_blank" download class="btn-outline" style="font-size: 11px; padding: 4px 10px; text-decoration: none;">Download</a>
+                            <a href="${doc.download_url}" target="_blank" download class="btn-outline" style="font-size: 11px; padding: 4px 10px; text-decoration: none;" onclick="trackEvent('download_doc_file', { doc_name: '${doc.name}', doc_url: '${doc.download_url}' })">Download</a>
                         </div>`;
                     });
                     listEl.innerHTML = html;
@@ -2683,24 +2758,29 @@
         }
 
         function expandGraphModal() {
+            trackEvent('graph_modal_expanded');
             document.getElementById('kg-modal').classList.add('active');
         }
 
         function closeGraphModal() {
+            trackEvent('graph_modal_closed');
             document.getElementById('kg-modal').classList.remove('active');
         }
 
         function openWelcomeModal() {
+            trackEvent('welcome_modal_opened');
             const el = document.getElementById('welcome-modal');
             if (el) el.classList.add('active');
         }
 
         function closeWelcomeModal() {
+            trackEvent('welcome_modal_closed');
             const el = document.getElementById('welcome-modal');
             if (el) el.classList.remove('active');
             
             const chk = document.getElementById('dont-show-welcome-chk');
             if (chk && chk.checked) {
+                trackEvent('welcome_modal_dismissed_permanently');
                 try {
                     localStorage.setItem('notcrm_welcome_seen', 'true');
                     document.cookie = "notcrm_welcome_seen=true; max-age=31536000; path=/";
