@@ -2186,6 +2186,19 @@
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             const target = document.getElementById(tabId);
             if (target) target.classList.add('active');
+
+            // Reset scroll position to top whenever switching tabs
+            const resetScroll = () => {
+                const ca = document.querySelector('.content-area');
+                if (ca) ca.scrollTop = 0;
+                window.scrollTo(0, 0);
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
+            };
+            resetScroll();
+            requestAnimationFrame(resetScroll);
+            setTimeout(resetScroll, 10);
+
             loadTab(tabId);
         }
 
