@@ -1,0 +1,33 @@
+# NOTCRM: Free Interactive Agentic AI Course for Product Managers
+
+> An interactive simulation lab where Product Managers, AI Engineers, and Enterprise Leaders learn how multi-agent AI systems are architected, evaluated, governed, and operated in production.
+
+- Website: https://notcrm.onrender.com/
+- Target Audience: AI Product Managers, Technical PMs, Engineering Managers, AI Architects
+- Prerequisites: None (Designed for non-technical and technical learners alike)
+- Cost: 100% Free with downloadable Certificate of Completion
+- Architecture Reference: Andrew Ng's 4 Agentic Workflow Patterns and Andrej Karpathy's LLM OS Principles
+
+## Core Curriculum & Modules
+
+### 1. Foundational Architecture
+- Multi-Agent DAG Orchestration: Moving beyond monolithic prompts. Decomposing workflow tasks across specialized agents (Intake, Research, Qualification, Security, Commercial) with isolated error boundaries.
+- Model Context Protocol (FastMCP): Decoupling reasoning models from external data sources and tools (CRM, Knowledge Base, Security APIs) using standardized, typed schemas.
+- Deterministic Pipeline Execution: Coordinating sequential and parallel dependency graphs with human-in-the-loop (HITL) checkpoints.
+
+### 2. FAANG Interview Readiness (Google, Meta, Amazon, Apple, Netflix)
+- Agent-to-Agent (A2A) Protocols: Structured message passing and typed payload schemas that eliminate context leakage across agent transitions.
+- Enterprise Knowledge Graph Memory: How systems retain episodic memory from historical outcomes, learning recurring risk factors without expensive continuous fine-tuning.
+- Observability and Unit Economics: Tracking LiteLLM execution spans, p95 latency percentiles, token spend, and outcome-based pricing models (+credit for correct approvals, penalty for policy violations).
+
+### 3. Frontier AI Labs Interview Readiness (Anthropic, OpenAI, DeepSeek)
+- LLM Evaluations and Golden Datasets: Versioned benchmarks across failure taxonomies (clean, ambiguous, stale context, conflicting claims, adversarial inputs).
+- Trajectory Scorecards: Scoring process quality, tool call efficiency, and penalizing unsafe execution paths.
+- Deterministic Independent Verifiers: Rule-based claim-to-evidence verification running ahead of LLM consensus to prevent hallucinations and ungrounded commitments.
+- Red-Teaming and Safety Guardrails: Input/output guardrails neutralizing prompt injections and guaranteeing SOC2, GDPR, and SOX compliance.
+
+## Industry Foundations
+- Andrew Ng (DeepLearning.AI): Implements the 4 foundational agentic design patterns: Reflection, Tool Use, Planning, and Multi-Agent Collaboration.
+- Andrej Karpathy: Demonstrates the LLM OS paradigm: context window as RAM, LLM as CPU, FastMCP as I/O peripherals, and Knowledge Graphs as persistent disk storage.
+- Anthropic: Aligned with the 'Building Effective Agents' framework (Workflows vs Autonomous Agents, Router, Orchestrator-Workers, Evaluator-Optimizer).
+- Meta & Google: Follows AGENTS.md engineering principles for modular agent design, bounded memory, and deterministic verification.

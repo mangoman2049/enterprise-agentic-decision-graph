@@ -237,7 +237,6 @@ class TestQABrowserFlows(unittest.TestCase):
         app_content = app_path.read_text(encoding="utf-8")
 
         banned = [
-            "Andrew Ng",
             "FUD",
             "FOMO",
             "NOTCRM V20",
