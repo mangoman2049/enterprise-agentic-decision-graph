@@ -3,7 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOTCRM: Autonomous AI Lead Engine</title>
+    <title>NOTCRM: Simulation-Based Learning for Agentic AI Product Managers</title>
+    <meta name="description" content="Interactive simulation lab where non-technical professionals learn how multi-agent AI systems are designed, evaluated, governed, and operated in production environments.">
+
+    <!-- Open Graph / Facebook / LinkedIn -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://notcrm.onrender.com/">
+    <meta property="og:title" content="NOTCRM: Simulation-Based Learning for Agentic AI Product Managers">
+    <meta property="og:description" content="Interactive simulation lab where non-technical professionals learn how multi-agent AI systems are designed, evaluated, governed, and operated in production.">
+    <meta property="og:image" content="https://notcrm.onrender.com/og-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="NOTCRM">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://notcrm.onrender.com/">
+    <meta name="twitter:title" content="NOTCRM: Simulation-Based Learning for Agentic AI Product Managers">
+    <meta name="twitter:description" content="Interactive simulation lab where non-technical professionals learn how multi-agent AI systems are designed, evaluated, governed, and operated in production.">
+    <meta name="twitter:image" content="https://notcrm.onrender.com/og-preview.png">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-M7C90S8YYC"></script>
     <script>
@@ -12,7 +30,7 @@
       gtag('js', new Date());
 
       gtag('config', 'G-M7C90S8YYC', {
-        page_title: 'NOTCRM: Autonomous AI Lead Engine',
+        page_title: 'NOTCRM: Simulation-Based Learning for Agentic AI',
         send_page_view: true
       });
     </script>
@@ -271,6 +289,32 @@
             <button class="btn-outline" onclick="openWelcomeModal()" id="welcome-modal-btn" style="background: white; border: 1px solid var(--border); color: var(--text-main); font-weight: 500; padding: 8px 16px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 6px;">👋 Welcome Guide</button>
             <button class="btn-outline" onclick="openDocsModal()" id="docs-modal-btn" style="background: white; border: 1px solid var(--border); color: var(--text-main); font-weight: 500; padding: 8px 16px; border-radius: 6px; cursor: pointer;">📖 Documentation & Standards</button>
             <button class="btn-primary" onclick="openModal()" id="knowledge-btn">Knowledge Check (0/6)</button>
+            <!-- Share Dropdown -->
+            <div style="position: relative; display: inline-block;" id="share-dropdown-wrapper">
+                <button class="btn-outline" onclick="toggleShareDropdown()" id="share-btn" style="background: white; border: 1px solid var(--border); color: var(--text-main); font-weight: 500; padding: 8px 16px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                    Share
+                </button>
+                <div id="share-dropdown" style="display: none; position: absolute; right: 0; top: 42px; background: white; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); z-index: 100; min-width: 200px; padding: 6px 0;">
+                    <div onclick="shareToLinkedIn()" style="padding: 10px 16px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 10px; color: var(--text-main); transition: background 0.15s;" onmouseover="this.style.background='var(--slate-light)'" onmouseout="this.style.background='transparent'">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        Share on LinkedIn
+                    </div>
+                    <div onclick="shareToX()" style="padding: 10px 16px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 10px; color: var(--text-main); transition: background 0.15s;" onmouseover="this.style.background='var(--slate-light)'" onmouseout="this.style.background='transparent'">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#000000"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        Share on X
+                    </div>
+                    <div onclick="shareToReddit()" style="padding: 10px 16px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 10px; color: var(--text-main); transition: background 0.15s;" onmouseover="this.style.background='var(--slate-light)'" onmouseout="this.style.background='transparent'">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#FF4500"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 0-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
+                        Share on Reddit
+                    </div>
+                    <div style="border-top: 1px solid var(--border); margin: 4px 0;"></div>
+                    <div onclick="copyShareLink()" style="padding: 10px 16px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 10px; color: var(--text-main); transition: background 0.15s;" onmouseover="this.style.background='var(--slate-light)'" onmouseout="this.style.background='transparent'" id="copy-link-item">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                        Copy link
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="tab-bar" id="tab-bar">
             <div class="tab active" onclick="switchTab('tab1', this)">1. Welcome & Hiring</div>
@@ -955,6 +999,41 @@
                         <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Test your understanding of Agentic AI, FastMCP, Golden Datasets, and Verifiers in the interactive Knowledge Check.</p>
                     </div>
                     <button class="btn-primary" onclick="openModal()" style="font-size: 14px; padding: 10px 22px;">Take Knowledge Check Quiz (0/6) →</button>
+                </div>
+
+                <!-- Certificate of Completion Module -->
+                <div class="card" style="margin-top: 24px; background: linear-gradient(135deg, #EEF2FF 0%, #F8FAFC 50%, #F0FDF4 100%); border: 1px solid var(--indigo); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: -20px; right: -20px; width: 120px; height: 120px; background: rgba(79,70,229,0.04); border-radius: 50%;"></div>
+                    <div style="position: absolute; bottom: -30px; left: -30px; width: 140px; height: 140px; background: rgba(5,150,105,0.04); border-radius: 50%;"></div>
+                    <div style="position: relative; z-index: 1;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                            <div style="width: 48px; height: 48px; background: var(--indigo); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white;">🎓</div>
+                            <div>
+                                <h3 style="font-size: 16px; margin-bottom: 2px; color: var(--text-main);">Certificate of Completion</h3>
+                                <p style="font-size: 12px; color: var(--text-muted);">Complete all 14 simulation modules to unlock your downloadable certificate.</p>
+                            </div>
+                        </div>
+                        <div id="cert-progress-section">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span style="font-size: 13px; font-weight: 500; color: var(--text-main);" id="cert-progress-label">Progress: 0 / 14 modules completed</span>
+                                <span class="badge badge-slate" id="cert-status-badge">In progress</span>
+                            </div>
+                            <div style="height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 16px;">
+                                <div id="cert-progress-bar" style="height: 100%; background: linear-gradient(90deg, var(--indigo), var(--emerald)); width: 0%; transition: width 0.4s ease; border-radius: 4px;"></div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                <div style="flex: 1;">
+                                    <label style="font-size: 12px; font-weight: 500; color: var(--text-main); display: block; margin-bottom: 6px;">Your name (for the certificate)</label>
+                                    <input type="text" id="cert-name-input" placeholder="Enter your full name" style="width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 6px; font-family: var(--font); font-size: 14px; color: var(--text-main); background: white; outline: none; transition: border 0.15s;" onfocus="this.style.borderColor='var(--indigo)'" onblur="this.style.borderColor='var(--border)'">
+                                </div>
+                                <button class="btn-primary" id="cert-download-btn" onclick="downloadCertificate()" style="font-size: 14px; padding: 10px 22px; margin-top: 18px; display: flex; align-items: center; gap: 8px; white-space: nowrap;" disabled>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                    Download Certificate
+                                </button>
+                            </div>
+                            <p style="font-size: 11px; color: var(--text-muted); margin-top: 10px;" id="cert-hint">Complete all 14 modules and enter your name to unlock the certificate.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1797,6 +1876,24 @@
             if (pText) pText.innerText = `${count} / 14 Verified (${pct}%)`;
             const pBar = document.getElementById('progress-bar');
             if (pBar) pBar.style.width = `${pct}%`;
+
+            // Certificate progress sync
+            const certLabel = document.getElementById('cert-progress-label');
+            if (certLabel) certLabel.innerText = `Progress: ${count} / 14 modules completed`;
+            const certBar = document.getElementById('cert-progress-bar');
+            if (certBar) certBar.style.width = `${pct}%`;
+            const certBadge = document.getElementById('cert-status-badge');
+            const certBtn = document.getElementById('cert-download-btn');
+            const certHint = document.getElementById('cert-hint');
+            if (count >= 14) {
+                if (certBadge) { certBadge.className = 'badge badge-emerald'; certBadge.innerText = 'Unlocked'; }
+                if (certBtn) certBtn.disabled = !document.getElementById('cert-name-input')?.value.trim();
+                if (certHint) certHint.innerText = 'Enter your name and download your certificate.';
+            } else {
+                if (certBadge) { certBadge.className = 'badge badge-slate'; certBadge.innerText = 'In progress'; }
+                if (certBtn) certBtn.disabled = true;
+                if (certHint) certHint.innerText = `Complete all 14 modules and enter your name to unlock the certificate. (${14 - count} remaining)`;
+            }
         }
 
         function markProgress(key) {
@@ -2824,8 +2921,249 @@
                 closeDocsModal();
                 closeModal();
                 closeGraphModal();
+                const dd = document.getElementById('share-dropdown');
+                if (dd) dd.style.display = 'none';
             }
         });
+
+        // Close share dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const wrapper = document.getElementById('share-dropdown-wrapper');
+            if (wrapper && !wrapper.contains(e.target)) {
+                const dd = document.getElementById('share-dropdown');
+                if (dd) dd.style.display = 'none';
+            }
+        });
+
+        // Share Dropdown Logic
+        function toggleShareDropdown() {
+            const dd = document.getElementById('share-dropdown');
+            if (dd) dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
+        }
+
+        const SHARE_URL = 'https://notcrm.onrender.com/';
+        const SHARE_TEXT = 'NOTCRM: Simulation-based learning for Agentic AI Product Managers. Interactive lab covering multi-agent orchestration, evals, governance, and observability.';
+
+        function shareToLinkedIn() {
+            trackEvent('share_website', { platform: 'linkedin' });
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(SHARE_URL)}`, '_blank', 'width=600,height=500');
+            document.getElementById('share-dropdown').style.display = 'none';
+        }
+
+        function shareToX() {
+            trackEvent('share_website', { platform: 'x_twitter' });
+            window.open(`https://x.com/intent/tweet?text=${encodeURIComponent(SHARE_TEXT)}&url=${encodeURIComponent(SHARE_URL)}`, '_blank', 'width=600,height=400');
+            document.getElementById('share-dropdown').style.display = 'none';
+        }
+
+        function shareToReddit() {
+            trackEvent('share_website', { platform: 'reddit' });
+            window.open(`https://www.reddit.com/submit?url=${encodeURIComponent(SHARE_URL)}&title=${encodeURIComponent('NOTCRM: Simulation-Based Learning for Agentic AI Product Managers')}`, '_blank', 'width=600,height=500');
+            document.getElementById('share-dropdown').style.display = 'none';
+        }
+
+        function copyShareLink() {
+            navigator.clipboard.writeText(SHARE_URL).then(() => {
+                trackEvent('share_website', { platform: 'copy_link' });
+                const item = document.getElementById('copy-link-item');
+                const orig = item.innerHTML;
+                item.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+                setTimeout(() => { item.innerHTML = orig; }, 1800);
+            }).catch(() => {});
+            document.getElementById('share-dropdown').style.display = 'none';
+        }
+
+        // Certificate name input: enable/disable download button
+        document.addEventListener('DOMContentLoaded', () => {
+            const nameInput = document.getElementById('cert-name-input');
+            if (nameInput) {
+                nameInput.addEventListener('input', () => {
+                    updateSidebar(); // re-evaluates cert unlock state
+                });
+            }
+        });
+
+        // Certificate Download via Canvas API
+        function downloadCertificate() {
+            const nameInput = document.getElementById('cert-name-input');
+            const recipientName = nameInput ? nameInput.value.trim() : '';
+            if (!recipientName) {
+                nameInput.style.borderColor = 'var(--crimson)';
+                nameInput.focus();
+                return;
+            }
+
+            trackEvent('certificate_downloaded', { recipient_name: recipientName });
+
+            const canvas = document.createElement('canvas');
+            const W = 1400, H = 990;
+            canvas.width = W;
+            canvas.height = H;
+            const ctx = canvas.getContext('2d');
+
+            // Background
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, W, H);
+
+            // Outer border (indigo)
+            ctx.strokeStyle = '#4F46E5';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(24, 24, W - 48, H - 48);
+
+            // Inner border (lighter)
+            ctx.strokeStyle = '#C7D2FE';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(36, 36, W - 72, H - 72);
+
+            // Corner ornaments (decorative circles)
+            const cornerR = 18;
+            [[60, 60], [W - 60, 60], [60, H - 60], [W - 60, H - 60]].forEach(([cx, cy]) => {
+                ctx.beginPath();
+                ctx.arc(cx, cy, cornerR, 0, Math.PI * 2);
+                ctx.fillStyle = '#EEF2FF';
+                ctx.fill();
+                ctx.strokeStyle = '#4F46E5';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+                ctx.fillStyle = '#4F46E5';
+                ctx.fill();
+            });
+
+            // NOTCRM branding
+            ctx.font = '700 28px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#4F46E5';
+            ctx.textAlign = 'center';
+            ctx.fillText('NOTCRM', W / 2, 110);
+
+            // Title
+            ctx.font = '300 16px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#64748B';
+            ctx.fillText('CERTIFICATE OF COMPLETION', W / 2, 145);
+
+            // Decorative line
+            ctx.beginPath();
+            ctx.moveTo(W / 2 - 160, 165);
+            ctx.lineTo(W / 2 + 160, 165);
+            ctx.strokeStyle = '#C7D2FE';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // Preamble
+            ctx.font = '400 16px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#475569';
+            ctx.fillText('This certifies that', W / 2, 210);
+
+            // Recipient name
+            ctx.font = '700 38px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#0F172A';
+            ctx.fillText(recipientName, W / 2, 268);
+
+            // Underline
+            const nameWidth = ctx.measureText(recipientName).width;
+            ctx.beginPath();
+            ctx.moveTo(W / 2 - nameWidth / 2 - 20, 282);
+            ctx.lineTo(W / 2 + nameWidth / 2 + 20, 282);
+            ctx.strokeStyle = '#4F46E5';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Completion text
+            ctx.font = '400 16px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#475569';
+            ctx.fillText('has successfully completed the', W / 2, 320);
+
+            ctx.font = '600 22px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#0F172A';
+            ctx.fillText('Enterprise Agentic AI: Evals, Governance & Operations', W / 2, 358);
+
+            ctx.font = '400 16px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#475569';
+            ctx.fillText('simulation-based training program, covering:', W / 2, 394);
+
+            // Module grid (2 columns)
+            const modules = [
+                ['F1-F4', 'Foundation Architecture: Multi-Agent DAG, FastMCP, A2A, Knowledge Graph'],
+                ['E1-E6', 'Evals & Verification: Contract, Golden Dataset, Component, Trajectory, Verifier, Regression'],
+                ['G1-G3', 'Governance & Safety: Policy Enforcement, Red-Team Adversarial, Compliance'],
+                ['Tab 6', 'Observability & Billing: LiteLLM Telemetry, Outcome-Based Pricing, Fleet Performance']
+            ];
+
+            ctx.textAlign = 'left';
+            let my = 434;
+            modules.forEach(([code, desc]) => {
+                // Checkmark
+                ctx.fillStyle = '#059669';
+                ctx.font = '700 14px Inter, system-ui, sans-serif';
+                ctx.fillText('\u2713', 180, my);
+                // Code
+                ctx.fillStyle = '#4F46E5';
+                ctx.font = '600 13px Inter, system-ui, sans-serif';
+                ctx.fillText(code, 200, my);
+                // Desc
+                ctx.fillStyle = '#334155';
+                ctx.font = '400 13px Inter, system-ui, sans-serif';
+                ctx.fillText(desc, 260, my);
+                my += 28;
+            });
+
+            ctx.textAlign = 'center';
+
+            // Knowledge Check
+            ctx.font = '400 15px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#475569';
+            ctx.fillText('Including successful completion of a 6-scenario Knowledge Check assessment.', W / 2, my + 20);
+
+            // Decorative line
+            ctx.beginPath();
+            ctx.moveTo(W / 2 - 200, my + 48);
+            ctx.lineTo(W / 2 + 200, my + 48);
+            ctx.strokeStyle = '#E2E8F0';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // Date
+            const today = new Date();
+            const dateStr = today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            ctx.font = '400 14px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#64748B';
+            ctx.fillText(`Issued: ${dateStr}`, W / 2, my + 80);
+
+            // Credential ID
+            const credId = 'NOTCRM-' + today.getFullYear() + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+            ctx.font = '400 12px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#94A3B8';
+            ctx.fillText(`Credential ID: ${credId}`, W / 2, my + 104);
+
+            // Signature lines
+            ctx.beginPath();
+            ctx.moveTo(240, H - 140);
+            ctx.lineTo(520, H - 140);
+            ctx.strokeStyle = '#CBD5E1';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(W - 520, H - 140);
+            ctx.lineTo(W - 240, H - 140);
+            ctx.stroke();
+
+            ctx.font = '400 12px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#64748B';
+            ctx.fillText('NOTCRM Simulation Lab', 380, H - 118);
+            ctx.fillText('notcrm.onrender.com', W - 380, H - 118);
+
+            ctx.font = '400 10px Inter, system-ui, sans-serif';
+            ctx.fillStyle = '#94A3B8';
+            ctx.fillText('Simulation-Based Learning for Agentic AI Product Managers', W / 2, H - 70);
+
+            // Download as PNG
+            const link = document.createElement('a');
+            link.download = `NOTCRM_Certificate_${recipientName.replace(/\s+/g, '_')}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
     </script>
 </body>
 </html>
