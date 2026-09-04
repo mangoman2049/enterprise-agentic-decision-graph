@@ -539,7 +539,7 @@ async def get_pipeline_funnel(request: Request):
 
 @app.get("/api/observability")
 async def get_observability_hub(request: Request):
-    """Returns comprehensive workplace agent performance evaluation, leaderboards, and LiteLLM telemetry."""
+    """Returns comprehensive workplace agent performance evaluation, OpenTelemetry process diagnostics, and 3-tier hybrid pricing."""
     session = get_session(request)
     flat_candidates = get_all_candidates_flat()
     fleet_summary = calculate_fleet_metrics(session.hired_agents)
@@ -564,21 +564,25 @@ async def get_observability_hub(request: Request):
         total_tokens = decisions_count * (180 + int(lat / 5))
         total_tokens_all += total_tokens
         
+        # Actionable diagnostic recommendations
         if acc >= 98.0 and errors_count == 0:
             rating = "TOP_PERFORMER"
             rating_label = "★ Top Performer"
             rating_badge = "var(--emerald)"
             review = f"Flawless execution ({acc}% accuracy). 0 false positives or policy violations. Recommended for core DAG leadership."
+            action_remediation = "Optimal configuration: Retain candidate in production."
         elif acc >= 93.0:
             rating = "ON_TARGET"
             rating_label = "✓ On Target"
             rating_badge = "var(--indigo)"
             review = f"Reliable delivery ({acc}% accuracy). Handled {decisions_count} evaluations with {lat}ms p95 latency. Meeting production SLA."
+            action_remediation = "Maintain current temperature and FastMCP tool boundaries."
         else:
             rating = "NEEDS_PIP"
             rating_label = "▲ Needs PIP"
             rating_badge = "var(--amber)"
             review = f"High velocity but {errors_count} compliance/routing slips detected ({acc}% accuracy). Consider swapping candidate for high-stakes enterprise deals."
+            action_remediation = f"Action recommended: Swap {cand['name']} for a balanced candidate in Tab 1 to eliminate schema variance."
             
         leaderboard.append({
             "role_id": rid,
@@ -595,20 +599,93 @@ async def get_observability_hub(request: Request):
             "rating": rating,
             "rating_label": rating_label,
             "rating_badge": rating_badge,
-            "review_narrative": review
+            "review_narrative": review,
+            "action_remediation": action_remediation
         })
         
+        # Rich OpenTelemetry GenAI span attributes
+        tool_call_name = "fastmcp:crm_search" if rid in ["intake", "research"] else ("fastmcp:kb_lookup" if rid in ["qualification", "product_fit"] else "fastmcp:security_scan")
         spans.append({
             "span_id": f"span_{rid}_{cand['id'][:6]}",
+            "trace_id": f"trace_lead_dag_{cand['id'][:8]}",
             "agent": cand["name"],
             "role": role["role_name"],
             "model": cand.get("model", "gemini-1.5-flash"),
             "latency_ms": lat,
             "tokens": int(total_tokens / max(decisions_count, 1)),
             "status": "200_OK",
-            "bias": cand["bias"]
+            "bias": cand["bias"],
+            "otel_attributes": {
+                "gen_ai.system": "notcrm_workflow_engine",
+                "gen_ai.agent.role": role["role_name"],
+                "gen_ai.tool.name": tool_call_name,
+                "gen_ai.tool.status": "optimal",
+                "process.loop_detected": False,
+                "process.retries_count": 0,
+                "process.path_state": "optimal_hop"
+            },
+            "diagnostic_tag": "✓ Clean DAG Hop (Zero Context Drift)"
         })
         
+    # Inject simulated high-value OpenTelemetry diagnostic anomaly spans (failed loops, costly retries, pruned paths)
+    spans.append({
+        "span_id": "span_diag_loop_guard",
+        "trace_id": "trace_lead_dag_anom01",
+        "agent": "Orchestrator Loop Guard",
+        "role": "DAG Topology Controller",
+        "model": "deterministic_kernel",
+        "latency_ms": 18,
+        "tokens": 42,
+        "status": "LOOP_BLOCKED",
+        "bias": "zero_drift",
+        "otel_attributes": {
+            "gen_ai.system": "notcrm_dag_orchestrator",
+            "process.loop_detected": True,
+            "process.loop_depth": 3,
+            "process.retries_count": 0,
+            "process.path_state": "cyclical_trap_neutralized"
+        },
+        "diagnostic_tag": "🛑 Cyclical Prompt Loop Neutralized (Saved $0.18 & 2.4s latency)"
+    })
+
+    spans.append({
+        "span_id": "span_diag_retry_recovery",
+        "trace_id": "trace_lead_dag_anom02",
+        "agent": "Research Agent (FastMCP Client)",
+        "role": "Account Research & Enrichment",
+        "model": "gemini-1.5-flash",
+        "latency_ms": 240,
+        "tokens": 310,
+        "status": "RETRY_RECOVERED",
+        "bias": "resilient",
+        "otel_attributes": {
+            "gen_ai.system": "notcrm_fastmcp_gateway",
+            "gen_ai.tool.name": "fastmcp:crm_search",
+            "process.loop_detected": False,
+            "process.retries_count": 1,
+            "process.path_state": "schema_retry_resolved"
+        },
+        "diagnostic_tag": "⚠️ FastMCP Schema Mismatch Auto-Recovered (+110ms backoff, 0 dropped fields)"
+    })
+
+    spans.append({
+        "span_id": "span_diag_pruned_path",
+        "trace_id": "trace_lead_dag_opt03",
+        "agent": "Qualification Gate Router",
+        "role": "Pipeline Routing Optimizer",
+        "model": "deterministic_kernel",
+        "latency_ms": 12,
+        "tokens": 28,
+        "status": "PRUNED_PATH",
+        "bias": "cost_efficiency",
+        "otel_attributes": {
+            "gen_ai.system": "notcrm_dag_orchestrator",
+            "process.path_state": "heavy_security_pruned_for_smb",
+            "process.tokens_saved": 480
+        },
+        "diagnostic_tag": "⚡ Unoptimized Path Pruned: SMB Lead Bypassed Security Scan (Saved 380ms, $0.08)"
+    })
+
     c = session.consumption
     total_spend = c["lead_ingestion"] + c["agent_execution"] + c["mcp_tool_calls"] + c["kg_queries"] + c["hitl_escalations"]
     total_revenue = c["accuracy_bonuses"]
@@ -617,12 +694,72 @@ async def get_observability_hub(request: Request):
     total_leads = len(session.processed_leads)
     roi_multiplier = round((session.metrics["total_pipeline"] / max(total_spend, 0.01)), 1)
     
+    # 3-Tier Hybrid Commercial Pricing Engine
+    platform_floor = 2500.00  # Monthly commitment platform floor
+    action_consumption = round(total_spend, 2)
+    contractible_outcome_net = round(total_revenue - total_penalties, 2)
+    effective_hybrid_monthly = round(platform_floor + action_consumption - contractible_outcome_net, 2)
+    
     return {
         "title": "Enterprise Agent Observability & Workplace Evaluation Hub",
         "fleet_summary": fleet_summary,
         "workplace_leaderboard": leaderboard,
         "telemetry_spans": spans,
         "total_tokens_processed": total_tokens_all,
+        
+        # Process Quality & OpenTelemetry Diagnostics (beyond raw token counters)
+        "process_diagnostics": {
+            "path_efficiency_score_pct": 91.4,
+            "failed_loops_blocked": 3,
+            "costly_retries_recovered": 2,
+            "unoptimized_paths_pruned": 14,
+            "tool_selection_quality": "94.2% Optimal",
+            "context_debt_tokens_saved": 1420,
+            "latency_p95_dag_ms": fleet_summary.get("p95_latency_ms", 390),
+            "fleet_accuracy_pct": fleet_summary.get("fleet_accuracy", 96.8)
+        },
+
+        # 3-Tier Hybrid Commercial Model
+        "hybrid_pricing": {
+            "tier1_platform_floor_usd": platform_floor,
+            "tier1_description": "Platform commitment floor: covers DAG orchestration runtime, FastMCP server gateways, in-memory Knowledge Graph persistence, and 99.9% enterprise availability SLA.",
+            "tier2_action_consumption_usd": action_consumption,
+            "tier2_description": "Metered action consumption: real marginal compute cost per lead ingestion ($0.02), DAG agent hop ($0.05), FastMCP tool call ($0.01), and Knowledge Graph lookup ($0.005).",
+            "tier3_contractible_outcomes_usd": contractible_outcome_net,
+            "tier3_description": "Contractible value-share: +$1.50 credited for verified auto-approvals meeting the Evaluation Contract; -$5.00 penalty for policy breaches or ungrounded claims caught by Independent Verifier.",
+            "net_effective_monthly_usd": effective_hybrid_monthly,
+            "estimated_gross_margin_pct": 78.4,
+            "strategic_rationale": "Pure outcome pricing only works when success is contractible. Hybrid is the industry standard: Commit floor + Action metering + Contractible outcome bonuses."
+        },
+
+        # Comparative Commercial Models (Interactive Simulator)
+        "commercial_models_comparison": {
+            "pure_action_metering": {
+                "name": "Pure Action / Token Metering",
+                "monthly_cost_usd": round(action_consumption * 1.85, 2),
+                "vendor_margin": "42%",
+                "customer_risk": "High (unbounded token bloat and unmonitored retries)",
+                "alignment": "Poor: Vendor earns more when models loop, thrash tools, or generate verbose context.",
+                "industry_verdict": "Legacy SaaS model being abandoned as models commoditize."
+            },
+            "pure_outcome_pricing": {
+                "name": "Pure Outcome Pricing",
+                "monthly_cost_usd": 360.00,
+                "vendor_margin": "Volatile (-15% to 85%)",
+                "customer_risk": "Low upfront",
+                "alignment": "Unviable: Disputes over lead attribution and subjective qualification boundaries.",
+                "industry_verdict": "Sounds clean in sales decks; breaks at contract renewal without deterministic verification."
+            },
+            "hybrid_model_default": {
+                "name": "3-Tier Hybrid Model (Industry Standard - NOTCRM Default)",
+                "monthly_cost_usd": effective_hybrid_monthly,
+                "vendor_margin": "78.4%",
+                "customer_risk": "Protected by platform commitment floor and verifier penalties",
+                "alignment": "Optimal: Actions cover real compute floor; outcomes reward verified business value.",
+                "industry_verdict": "The emerging standard adopted by frontier enterprise AI platforms (Sierra, Intercom)."
+            }
+        },
+
         "financials": {
             "total_spend": round(total_spend, 2),
             "accuracy_bonuses": round(total_revenue, 2),
@@ -639,19 +776,21 @@ async def get_observability_hub(request: Request):
         "cost_per_lead": round(net_cost / max(total_leads, 1), 2),
         "total_leads_processed": total_leads,
         "pricing_model": {
+            "platform_floor_monthly": platform_floor,
             "lead_ingestion": 0.02,
             "agent_execution_per_call": 0.05,
             "mcp_tool_call": 0.01,
             "kg_query": 0.005,
             "hitl_escalation": 2.00,
-            "correct_auto_approval_bonus": 0.50,
-            "correct_auto_rejection_bonus": 0.25,
+            "correct_auto_approval_bonus": 1.50,
+            "correct_auto_rejection_bonus": 0.50,
             "incorrect_decision_penalty": -5.00
         },
         "pricing_footnotes": [
-            "* Model token pricing calculated via LiteLLM standard cost tables: Gemini 1.5 Flash ($0.075/1M in, $0.30/1M out), GPT-4o-Mini ($0.15/1M in, $0.60/1M out), Gemini 1.5 Pro ($1.25/1M in, $5.00/1M out), Claude 3.5 Sonnet ($3.00/1M in, $15.00/1M out).",
-            "** Outcome bonuses reward high-accuracy decisions (+ $0.50 for verified auto-approvals) to model SaaS value-sharing.",
-            "*** High-temperature agents (0.85 - 0.95) exhibit higher variance and hallucination penalties under stress."
+            "* Platform Commitment Floor: $2,500/mo protects vendor unit margins while guaranteeing runtime infrastructure and Knowledge Graph persistence.",
+            "** Action Consumption Metering: Billed on completed execution units (FastMCP calls, DAG hops) so every action carries transparent marginal cost.",
+            "*** Contractible Outcomes: Evaluated against the Independent Verifier and Golden Evaluation Contract. Only deterministically verified outcomes trigger value-share bonuses.",
+            "**** Context Ownership Principle: 'Models get cheaper. Agents get copied. Context does not.' Owning workflow memory creates durable enterprise enterprise retention."
         ]
     }
 
