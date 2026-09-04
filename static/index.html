@@ -5,6 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOTCRM: Free Agentic AI Course for Product Managers | Simulation Lab</title>
     <meta name="description" content="Free, interactive simulation-based Agentic AI course for Product Managers. Master multi-agent DAG orchestration, FastMCP tools, Evals, deterministic verifiers, and governance. Prepare for FAANG, Anthropic, OpenAI, and DeepSeek interviews.">
+
+    <!-- Essential Social Sharing & Open Graph Tags (Top of head for fast crawler detection) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://notcrm.onrender.com/">
+    <meta property="og:site_name" content="NOTCRM">
+    <meta property="og:title" content="NOTCRM: Simulation-Based Learning for Agentic AI Product Managers">
+    <meta property="og:description" content="Free interactive simulation lab where Product Managers learn how multi-agent AI systems are designed, evaluated, governed, and operated in production.">
+    <meta property="og:image" content="https://notcrm.onrender.com/og-preview.png">
+    <meta property="og:image:secure_url" content="https://notcrm.onrender.com/og-preview.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="NOTCRM: Simulation-Based Learning for Agentic AI Product Managers">
+
+    <!-- Twitter Card (summary_large_image) -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:domain" content="notcrm.onrender.com">
+    <meta name="twitter:url" content="https://notcrm.onrender.com/">
+    <meta name="twitter:title" content="NOTCRM: Simulation-Based Learning for Agentic AI Product Managers">
+    <meta name="twitter:description" content="Free interactive simulation lab where Product Managers learn how multi-agent AI systems are designed, evaluated, governed, and operated in production.">
+    <meta name="twitter:image" content="https://notcrm.onrender.com/og-preview.png">
+    <meta name="twitter:image:src" content="https://notcrm.onrender.com/og-preview.png">
+    <meta name="twitter:image:alt" content="NOTCRM: Simulation-Based Learning for Agentic AI Product Managers">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:domain" content="notcrm.onrender.com">
+    <meta property="twitter:url" content="https://notcrm.onrender.com/">
+    <meta property="twitter:title" content="NOTCRM: Simulation-Based Learning for Agentic AI Product Managers">
+    <meta property="twitter:description" content="Free interactive simulation lab where Product Managers learn how multi-agent AI systems are designed, evaluated, governed, and operated in production.">
+    <meta property="twitter:image" content="https://notcrm.onrender.com/og-preview.png">
+
     <meta name="keywords" content="Agentic AI Course, Free Agentic AI course, Agentic AI for product managers, AI Product Manager Course, Multi-Agent Systems, Andrew Ng Agentic Workflows, Andrej Karpathy LLM OS, FastMCP, Model Context Protocol, A2A Protocol, LLM Evaluations, Golden Dataset, Trajectory Scorecard, Independent Verifier, AI Safety Guardrails, FAANG AI PM Interview, Anthropic Agent Patterns, OpenAI Swarm, DeepSeek">
     <meta name="author" content="NOTCRM Educational Simulation Lab">
     <link rel="canonical" href="https://notcrm.onrender.com/">
@@ -132,23 +162,6 @@
       ]
     }
     </script>
-
-    <!-- Open Graph / Facebook / LinkedIn -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://notcrm.onrender.com/">
-    <meta property="og:title" content="NOTCRM: Simulation-Based Learning for Agentic AI Product Managers">
-    <meta property="og:description" content="Interactive simulation lab where non-technical professionals learn how multi-agent AI systems are designed, evaluated, governed, and operated in production.">
-    <meta property="og:image" content="https://notcrm.onrender.com/og-preview.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="NOTCRM">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://notcrm.onrender.com/">
-    <meta name="twitter:title" content="NOTCRM: Simulation-Based Learning for Agentic AI Product Managers">
-    <meta name="twitter:description" content="Interactive simulation lab where non-technical professionals learn how multi-agent AI systems are designed, evaluated, governed, and operated in production.">
-    <meta name="twitter:image" content="https://notcrm.onrender.com/og-preview.png">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-M7C90S8YYC"></script>
     <script>
@@ -3151,29 +3164,32 @@
             if (dd) dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
         }
 
-        const SHARE_URL = 'https://notcrm.onrender.com/';
+        const BASE_SHARE_URL = 'https://notcrm.onrender.com/';
         const SHARE_TEXT = 'NOTCRM: Simulation-based learning for Agentic AI Product Managers. Interactive lab covering multi-agent orchestration, evals, governance, and observability.';
 
         function shareToLinkedIn() {
             trackEvent('share_website', { platform: 'linkedin' });
-            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(SHARE_URL)}`, '_blank', 'width=600,height=500');
+            const url = 'https://notcrm.onrender.com/?ref=linkedin';
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank', 'width=600,height=500');
             document.getElementById('share-dropdown').style.display = 'none';
         }
 
         function shareToX() {
             trackEvent('share_website', { platform: 'x_twitter' });
-            window.open(`https://x.com/intent/tweet?text=${encodeURIComponent(SHARE_TEXT)}&url=${encodeURIComponent(SHARE_URL)}`, '_blank', 'width=600,height=400');
+            const url = 'https://notcrm.onrender.com/?ref=x';
+            window.open(`https://x.com/intent/tweet?text=${encodeURIComponent(SHARE_TEXT)}&url=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400');
             document.getElementById('share-dropdown').style.display = 'none';
         }
 
         function shareToReddit() {
             trackEvent('share_website', { platform: 'reddit' });
-            window.open(`https://www.reddit.com/submit?url=${encodeURIComponent(SHARE_URL)}&title=${encodeURIComponent('NOTCRM: Simulation-Based Learning for Agentic AI Product Managers')}`, '_blank', 'width=600,height=500');
+            const url = 'https://notcrm.onrender.com/?ref=reddit';
+            window.open(`https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent('NOTCRM: Simulation-Based Learning for Agentic AI Product Managers')}`, '_blank', 'width=600,height=500');
             document.getElementById('share-dropdown').style.display = 'none';
         }
 
         function copyShareLink() {
-            navigator.clipboard.writeText(SHARE_URL).then(() => {
+            navigator.clipboard.writeText(BASE_SHARE_URL).then(() => {
                 trackEvent('share_website', { platform: 'copy_link' });
                 const item = document.getElementById('copy-link-item');
                 const orig = item.innerHTML;
