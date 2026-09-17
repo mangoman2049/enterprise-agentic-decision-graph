@@ -1639,16 +1639,18 @@
                 </div>
             </div>
             
-            <div id="quiz-container">
+            <div id="quiz-container" style="max-height: 62vh; overflow-y: auto; padding-right: 4px;">
                 <!-- Populated by JS -->
             </div>
             
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; border-top: 1px solid var(--border); padding-top: 16px;">
                 <button class="btn-secondary" id="quiz-prev" onclick="navQuiz(-1)" disabled>Previous</button>
                 <div style="font-size: 13px; color: var(--text-muted); align-self: center;" id="quiz-progress">Question 1 of 6</div>
-                <div style="display: flex; gap: 8px;">
-                    <button class="btn-outline" onclick="closeModal()" style="font-size: 13px; padding: 8px 14px;">Exit</button>
+                <div style="display: flex; gap: 8px;" id="quiz-footer-actions">
+                    <button class="btn-outline" id="quiz-retake" onclick="retakeQuiz()" style="display: none; font-size: 13px; padding: 8px 14px;">Retake Check</button>
+                    <button class="btn-outline" id="quiz-exit" onclick="closeModal()" style="font-size: 13px; padding: 8px 14px;">Exit</button>
                     <button class="btn-primary" id="quiz-next" onclick="navQuiz(1)">Next</button>
+                    <button class="btn-primary" id="quiz-done" onclick="closeModal()" style="display: none; font-size: 13px; padding: 8px 18px; background: var(--emerald);">Done</button>
                 </div>
             </div>
         </div>
@@ -2804,6 +2806,8 @@
         }
 
         // Quiz Logic
+        let latestQuizResult = null;
+
         async function initQuiz() {
             const container = document.getElementById('quiz-container');
             container.innerHTML = '<div style="color: var(--text-muted); padding: 20px 0;">Loading Knowledge Check questions...</div>';
@@ -2824,7 +2828,10 @@
             quizQuestions.forEach((q, i) => {
                 const optKeys = Object.keys(q.options || {});
                 html += `<div class="quiz-question" id="q-${i}">
-                    <div style="font-size: 11px; text-transform: uppercase; color: var(--indigo); font-weight: 600; margin-bottom: 4px;">${q.module_title || ('Module ' + q.module_id)}</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <span style="font-size: 11px; text-transform: uppercase; color: var(--indigo); font-weight: 600;">${q.module_title || ('Module ' + q.module_id)}</span>
+                        <span style="font-size: 11px; color: var(--text-muted); font-weight: 500;">Scenario ${i+1} of ${quizQuestions.length}</span>
+                    </div>
                     <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; font-weight: 500;">Topic: ${q.topic || 'Architecture'}</div>
                     <h4 style="margin-bottom: 16px; font-size: 14px; line-height: 1.5; color: var(--text-main);">${i+1}. ${q.scenario}</h4>
                     <div class="options-container">
@@ -2833,6 +2840,32 @@
                     <div class="quiz-feedback" id="fb-${i}"></div>
                 </div>`;
             });
+
+            // Add the Final Score page as the last page
+            html += `<div class="quiz-question" id="q-results">
+                <div style="text-align: center; padding: 12px 0 16px 0;">
+                    <div style="font-size: 11px; text-transform: uppercase; color: var(--indigo); font-weight: 700; letter-spacing: 0.8px; margin-bottom: 6px;">Knowledge Check Final Score</div>
+                    <div id="quiz-final-score-val" style="font-size: 46px; font-weight: 800; color: var(--emerald); line-height: 1.1; margin-bottom: 8px;">0%</div>
+                    <div id="quiz-final-badge" style="margin-bottom: 10px;">
+                        <span class="badge badge-emerald" style="font-size: 12px; padding: 4px 14px;">PASSED</span>
+                    </div>
+                    <div id="quiz-final-summary" style="font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 4px;">
+                        Loading assessment summary...
+                    </div>
+                    <div id="quiz-final-counts" style="font-size: 13px; color: var(--text-muted);">
+                        0 of ${quizQuestions.length} scenarios completed.
+                    </div>
+                </div>
+                <div style="border: 1px solid var(--border); border-radius: 8px; padding: 16px; background: #FFFFFF; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(15,23,42,0.03);">
+                    <div style="font-weight: 700; font-size: 12px; color: var(--slate); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">Scenario Competency Breakdown</div>
+                    <div id="quiz-results-breakdown" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                </div>
+                <div id="quiz-cert-callout" style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #166534; display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 20px;">🎓</span>
+                    <div><strong>Verified Credential:</strong> Your final score has been saved to your session and linked to your Verified Certificate of Completion.</div>
+                </div>
+            </div>`;
+
             container.innerHTML = html;
             updateQuizView();
         }
@@ -2842,11 +2875,45 @@
             document.getElementById('quiz-modal').classList.add('active');
             updateQuizView();
         }
+
         function closeModal() {
             trackEvent('quiz_closed');
             document.getElementById('quiz-modal').classList.remove('active');
         }
-        
+
+        async function submitQuizIfReady() {
+            const answeredCount = Object.keys(selectedAnswers).length;
+            const totalCount = quizQuestions.length;
+            if (answeredCount === totalCount && !latestQuizResult) {
+                try {
+                    const submitRes = await apiFetch('/api/quiz/submit', {
+                        method: 'POST',
+                        body: JSON.stringify({ answers: selectedAnswers })
+                    });
+                    latestQuizResult = submitRes;
+                    const passed = submitRes.passed;
+                    const score = submitRes.score_pct;
+                    state.quizScore = score;
+                    state.quizCompleted = true;
+
+                    const kBtn = document.getElementById('knowledge-btn');
+                    if (kBtn) {
+                        kBtn.classList.remove('btn-primary');
+                        kBtn.style.background = passed ? 'var(--emerald)' : 'var(--amber)';
+                        kBtn.innerText = `Knowledge Check: ${score}% (${passed ? 'Passed' : 'Reviewed'})`;
+                    }
+
+                    trackEvent('quiz_completed', {
+                        score_pct: score,
+                        passed: passed,
+                        total_questions: totalCount
+                    });
+                } catch(e) {
+                    console.error("Error submitting quiz:", e);
+                }
+            }
+        }
+
         async function selectAnswer(qIdx, optKey) {
             const q = quizQuestions[qIdx];
             if (!q) return;
@@ -2880,45 +2947,182 @@
             
             const answeredCount = Object.keys(selectedAnswers).length;
             const totalCount = quizQuestions.length;
-            document.getElementById('knowledge-btn').innerText = `Knowledge Check (${answeredCount}/${totalCount})`;
+            const kBtn = document.getElementById('knowledge-btn');
+            if (kBtn) kBtn.innerText = `Knowledge Check (${answeredCount}/${totalCount})`;
             
             if (answeredCount === totalCount) {
-                // Submit to backend
-                try {
-                    const submitRes = await apiFetch('/api/quiz/submit', {
-                        method: 'POST',
-                        body: JSON.stringify({ answers: selectedAnswers })
-                    });
-                    const passed = submitRes.passed;
-                    const score = submitRes.score_pct;
-                    const kBtn = document.getElementById('knowledge-btn');
-                    kBtn.classList.remove('btn-primary');
-                    kBtn.style.background = passed ? 'var(--emerald)' : 'var(--amber)';
-                    kBtn.innerText = `Knowledge Check: ${score}% (${passed ? 'Passed' : 'Reviewed'})`;
-
-                    trackEvent('quiz_completed', {
-                        score_pct: score,
-                        passed: passed,
-                        total_questions: totalCount
-                    });
-                } catch(e) {}
+                await submitQuizIfReady();
+                fb.innerHTML += `<div style="margin-top: 14px; padding: 10px 14px; background: #EEF2FF; border: 1px solid #C7D2FE; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <span style="font-size: 13px; color: #3730A3;"><strong>All 6 scenarios completed!</strong> Ready to view final score.</span>
+                    <button class="btn-primary" onclick="navQuiz(1)" style="font-size: 12px; padding: 6px 14px;">View Final Score →</button>
+                </div>`;
             }
-        }
 
-        function navQuiz(dir) {
-            currentQuizIndex += dir;
             updateQuizView();
         }
 
-        function updateQuizView() {
-            document.querySelectorAll('.quiz-question').forEach(q => q.classList.remove('active'));
-            if(document.getElementById(`q-${currentQuizIndex}`)) {
-                document.getElementById(`q-${currentQuizIndex}`).classList.add('active');
-            }
+        function navQuiz(dir) {
             const total = quizQuestions.length || 6;
-            document.getElementById('quiz-prev').disabled = currentQuizIndex === 0;
-            document.getElementById('quiz-next').disabled = currentQuizIndex === total - 1;
-            document.getElementById('quiz-progress').innerText = `Question ${currentQuizIndex + 1} of ${total}`;
+            currentQuizIndex += dir;
+            if (currentQuizIndex < 0) currentQuizIndex = 0;
+            if (currentQuizIndex > total) currentQuizIndex = total;
+            updateQuizView();
+        }
+
+        function retakeQuiz() {
+            trackEvent('quiz_retake_initiated');
+            selectedAnswers = {};
+            latestQuizResult = null;
+            currentQuizIndex = 0;
+            state.quizScore = 0;
+            state.quizCompleted = false;
+
+            document.querySelectorAll('.quiz-option').forEach(el => el.classList.remove('selected'));
+            document.querySelectorAll('.quiz-feedback').forEach(el => {
+                el.className = 'quiz-feedback';
+                el.innerHTML = '';
+            });
+
+            const kBtn = document.getElementById('knowledge-btn');
+            if (kBtn) {
+                kBtn.className = 'btn-primary';
+                kBtn.style.background = '';
+                kBtn.innerText = `Knowledge Check (0/${quizQuestions.length})`;
+            }
+
+            updateQuizView();
+        }
+
+        function renderQuizResults() {
+            const total = quizQuestions.length || 6;
+            let correctCount = 0;
+            let answeredCount = 0;
+
+            quizQuestions.forEach(q => {
+                const sel = selectedAnswers[q.id];
+                if (sel) {
+                    answeredCount++;
+                    if (sel === q.correct_option) correctCount++;
+                }
+            });
+
+            const score = (latestQuizResult && latestQuizResult.score_pct != null)
+                ? latestQuizResult.score_pct
+                : (total > 0 ? Math.round((correctCount / total) * 100) : 0);
+            const passed = (score >= 80.0);
+
+            const scoreValEl = document.getElementById('quiz-final-score-val');
+            if (scoreValEl) {
+                scoreValEl.innerText = `${score}%`;
+                scoreValEl.style.color = passed ? 'var(--emerald)' : 'var(--amber)';
+            }
+
+            const badgeEl = document.getElementById('quiz-final-badge');
+            if (badgeEl) {
+                badgeEl.innerHTML = passed
+                    ? '<span class="badge badge-emerald" style="font-size: 12px; padding: 4px 14px;">PASSED (Threshold: 80%)</span>'
+                    : '<span class="badge badge-amber" style="font-size: 12px; padding: 4px 14px;">REVIEW RECOMMENDED (Threshold: 80%)</span>';
+            }
+
+            const summaryEl = document.getElementById('quiz-final-summary');
+            if (summaryEl) {
+                summaryEl.innerText = (latestQuizResult && latestQuizResult.feedback_summary)
+                    ? latestQuizResult.feedback_summary
+                    : (passed
+                        ? 'Outstanding mastery of NOTCRM Architecture & Governance.'
+                        : 'Good effort. Review the individual topic feedback to reinforce architectural principles.');
+            }
+
+            const countsEl = document.getElementById('quiz-final-counts');
+            if (countsEl) {
+                countsEl.innerText = `You scored ${correctCount} of ${total} scenarios correct (${answeredCount} answered).`;
+            }
+
+            const breakdownEl = document.getElementById('quiz-results-breakdown');
+            if (breakdownEl) {
+                let bHtml = '';
+                quizQuestions.forEach((q, idx) => {
+                    const sel = selectedAnswers[q.id];
+                    const isCorrect = (sel === q.correct_option);
+                    const statusBadge = !sel
+                        ? '<span class="badge badge-slate">Unanswered</span>'
+                        : (isCorrect
+                            ? '<span class="badge badge-emerald">Correct</span>'
+                            : '<span class="badge badge-amber">Reviewed</span>');
+
+                    bHtml += `<div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: #F8FAFC; border: 1px solid var(--border); border-radius: 6px; font-size: 13px;">
+                        <div style="flex: 1; padding-right: 12px;">
+                            <strong>${idx + 1}. ${q.topic || 'Architecture'}</strong>: <span style="color: var(--text-muted); font-size: 12px;">${(q.scenario || '').substring(0, 75)}...</span>
+                        </div>
+                        <div>${statusBadge}</div>
+                    </div>`;
+                });
+                breakdownEl.innerHTML = bHtml;
+            }
+        }
+
+        function updateQuizView() {
+            const total = quizQuestions.length || 6;
+            const isResultsPage = (currentQuizIndex >= total);
+
+            document.querySelectorAll('.quiz-question').forEach(q => q.classList.remove('active'));
+
+            const prevBtn = document.getElementById('quiz-prev');
+            const nextBtn = document.getElementById('quiz-next');
+            const retakeBtn = document.getElementById('quiz-retake');
+            const exitBtn = document.getElementById('quiz-exit');
+            const doneBtn = document.getElementById('quiz-done');
+            const progressEl = document.getElementById('quiz-progress');
+
+            if (isResultsPage) {
+                // LAST PAGE: Final Score screen (NO NEXT BUTTON)
+                const resultsEl = document.getElementById('q-results');
+                if (resultsEl) resultsEl.classList.add('active');
+
+                submitQuizIfReady().then(() => renderQuizResults());
+                renderQuizResults();
+
+                if (prevBtn) {
+                    prevBtn.disabled = false;
+                    prevBtn.innerText = '← Previous';
+                }
+                if (progressEl) {
+                    progressEl.innerText = 'Final Score & Results';
+                }
+                if (nextBtn) {
+                    // Do NOT show a Next button on the last page
+                    nextBtn.style.display = 'none';
+                }
+                if (retakeBtn) retakeBtn.style.display = 'inline-block';
+                if (exitBtn) exitBtn.style.display = 'none';
+                if (doneBtn) doneBtn.style.display = 'inline-block';
+            } else {
+                // Question Pages (0 to total - 1)
+                const qEl = document.getElementById(`q-${currentQuizIndex}`);
+                if (qEl) qEl.classList.add('active');
+
+                if (prevBtn) {
+                    prevBtn.disabled = (currentQuizIndex === 0);
+                    prevBtn.innerText = 'Previous';
+                }
+                if (progressEl) {
+                    progressEl.innerText = `Question ${currentQuizIndex + 1} of ${total}`;
+                }
+
+                if (retakeBtn) retakeBtn.style.display = 'none';
+                if (exitBtn) exitBtn.style.display = 'inline-block';
+                if (doneBtn) doneBtn.style.display = 'none';
+
+                if (nextBtn) {
+                    nextBtn.style.display = 'inline-block';
+                    if (currentQuizIndex === total - 1) {
+                        // On Question 6: button navigates to the Final Score page
+                        nextBtn.innerText = 'View Final Score →';
+                    } else {
+                        nextBtn.innerText = 'Next';
+                    }
+                }
+            }
         }
 
         let latestObservabilityData = null;
